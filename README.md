@@ -1,3 +1,4 @@
 # CptS_321_HW_Assignments
-
-my programming assignments for CptS 321
+Ryan Bean
+ryan.bean@wsu.edu
+11670335
