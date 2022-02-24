@@ -39,10 +39,11 @@ namespace SpreadsheetEngine
         /// </summary>
         /// <param name="newRowIndex"> Value for the row index. </param>
         /// <param name="newColumnIndex"> Value for the Column index. </param>
-        public Cell(int newRowIndex, int newColumnIndex)
+        public Cell(int newColumnIndex, int newRowIndex)
         {
             this.rowIndex = newRowIndex;
             this.columnIndex = newColumnIndex;
+            this.text = this.value = string.Empty;
         }
 
         /// <summary>
@@ -99,6 +100,17 @@ namespace SpreadsheetEngine
         public int RowIndex
         {
             get { return this.rowIndex; }
+        }
+
+        /// <summary>
+        /// I made this because in the Spreadsheet class I need to set the value of the column and row index for each cell.
+        /// </summary>
+        /// <param name="newColumnIndex"> Value for the columnIndex member. </param>
+        /// <param name="newRowIndex"> Value for the rowIndex member. </param>
+        public void SetCellColumnAndRowIndex(int newColumnIndex, int newRowIndex)
+        {
+            this.columnIndex = newColumnIndex;
+            this.rowIndex = newRowIndex;
         }
     }
 }
