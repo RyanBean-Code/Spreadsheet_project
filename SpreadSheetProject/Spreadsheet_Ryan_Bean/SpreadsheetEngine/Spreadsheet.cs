@@ -23,6 +23,17 @@ namespace SpreadsheetEngine
         public event PropertyChangedEventHandler CellPropertyChanged = delegate { };
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
+        /// </summary>
+        /// <param name="numRows"> Number of Rows in the Spreadsheet. </param>
+        /// <param name="numColumns"> Number of Columns in the Spreadsheet. </param>
+        public Spreadsheet(int numRows, int numColumns) 
+        {
+            this.cells = new Cell[numColumns, numRows];
+            this.InitializeCells(numColumns, numRows);
+        }
+
+        /// <summary>
         /// Gets the number of columns in the Spreadsheet.
         /// </summary>
         public int ColumnCount
@@ -36,17 +47,6 @@ namespace SpreadsheetEngine
         public int RowCount
         {
             get { return this.cells.GetLength(1); }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
-        /// </summary>
-        /// <param name="numRows"> Number of Rows in the Spreadsheet. </param>
-        /// <param name="numColumns"> Number of Columns in the Spreadsheet. </param>
-        public Spreadsheet(int numRows, int numColumns)
-        {
-            this.cells = new Cell[numColumns + 1, numRows + 1];
-            this.InitializeCells();
         }
 
         /// <summary>
@@ -66,16 +66,43 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
-        /// Initializes all the cells in the spreadsheet;
+        /// Method is called when a cell gets new text entered.
+        /// Right now this will just support copying the value from another cell, later it will support arithemetic.
         /// </summary>
-        private void InitializeCells()
+        /// <param name="row"> Row of the cell being updated. </param>
+        /// <param name="column"> Column of the cell being updated. </param>
+        /// <param name="newText"> The new Text that exists in the cell. </param>
+        /// <returns> The value of that the current cell shoudl now be. </returns>
+        public string? UpdateCell(int row, int column, string newText)
         {
-            for (int cIndex = 1; cIndex < this.cells.GetLength(0) + 1; cIndex++)
+            string? newValue = newText;
+            char copyColumnChar = 'A';
+            int copyColumnInt = 0;
+            string rowString = System.Text.RegularExpressions.Regex.Match(newText, @"\d+").Value;
+            int copyRow = int.Parse(rowString) - 1;
+            while (copyColumnChar != newText[1])
             {
-                for (int rIndex = 1; rIndex < this.cells.GetLength(1) + 1; rIndex++)
+                copyColumnChar++;
+                copyColumnInt++;
+            }
+
+            newValue = this.cells[copyColumnInt, copyRow].Text;
+            this.cells[column, row].Text = newValue;
+            this.cells[column, row].Value = newValue;
+            return newValue;
+        }
+
+        /// <summary>
+        /// Initializes all the cells in the spreadsheet.
+        /// </summary>
+        private void InitializeCells(int numColumns, int numRows)
+        {
+            for (int cIndex = 0; cIndex < numColumns; cIndex++)
+            {
+                for (int rIndex = 0; rIndex < numRows; rIndex++)
                 {
-                    // this.cells[cIndex, rIndex] = new Cell(cIndex, rIndex);
-                    this.cells[cIndex, rIndex].SetCellColumnAndRowIndex(cIndex, rIndex);
+                    this.cells[cIndex, rIndex] = new Cell(cIndex, rIndex);
+                    //this.cells[cIndex, rIndex].PropertyChanged += this.CellPropertyChanged;
                 }
             }
         }
