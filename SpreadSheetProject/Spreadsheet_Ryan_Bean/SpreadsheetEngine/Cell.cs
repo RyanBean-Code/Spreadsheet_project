@@ -11,7 +11,6 @@ namespace SpreadsheetEngine
     /// </summary>
     public class Cell : CellBase
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>

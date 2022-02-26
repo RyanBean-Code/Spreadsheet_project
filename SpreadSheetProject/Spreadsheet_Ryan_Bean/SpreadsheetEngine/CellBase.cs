@@ -49,7 +49,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// The event that is triggered when new text is added in the textbox.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler? PropertyChanged = delegate { };
 
         /// <summary>
         /// Gets or sets the text is the textbox.
@@ -68,18 +68,12 @@ namespace SpreadsheetEngine
                 if (this.text != value)
                 {
                     this.text = value;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
         }
-
-        //public void PropertChangedHandler(object sender, EventArgs e)
-        //{
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        this.text = "hi";
-        //    }
-        //}
 
         /// <summary>
         /// Gets or sets the value member variable.
@@ -96,7 +90,9 @@ namespace SpreadsheetEngine
                 if (value != this.value)
                 {
                     this.value = value;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
         }

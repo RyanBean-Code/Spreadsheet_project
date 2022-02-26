@@ -66,35 +66,6 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
-        /// Method is called when a cell gets new text entered.
-        /// Right now this will just support copying the value from another cell, later it will support arithemetic.
-        /// </summary>
-        /// <param name="row"> Row of the cell being updated. </param>
-        /// <param name="column"> Column of the cell being updated. </param>
-        /// <param name="newText"> The new Text that exists in the cell. </param>
-        /// <returns> The value of that the current cell shoudl now be. </returns>
-        public string? UpdateCell(int row, int column, string newText)
-        {
-            string? newValue = newText;
-            char copyColumnChar = 'A';
-            int copyColumnInt = 0;
-            string rowString = System.Text.RegularExpressions.Regex.Match(newText, @"\d+").Value;
-            int copyRow = int.Parse(rowString) - 1;
-            while (copyColumnChar != newText[1])
-            {
-                copyColumnChar++;
-                copyColumnInt++;
-            }
-
-            newValue = this.cells[copyColumnInt, copyRow].Text;
-            this.cells[column, row].Text = newValue;
-            this.cells[column, row].Value = newText;
-
-            // this.cells[column, row].PropertyChanged += new PropertyChangedEventHandler(this.cells[column, row].PropertyChangedHandler(this.cells[copyColumnInt, copyRow], ));
-            return newValue;
-        }
-
-        /// <summary>
         /// Initializes all the cells in the spreadsheet.
         /// </summary>
         private void InitializeCells(int numColumns, int numRows)
@@ -109,24 +80,37 @@ namespace SpreadsheetEngine
             }
         }
 
+        /// <summary>
+        /// Fires whenever a cell changes.
+        /// </summary>
+        /// <param name="sender"> The cell which changed. </param>
+        /// <param name="e"> Whether the value or text changed. </param>
         private void Spreadsheet_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Text")
+            Cell? senderCell = (Cell)sender;
+            if (senderCell != null)
             {
-                if (((Cell)sender).Text.StartsWith('='))
+                if (e.PropertyName == "Text")
                 {
-                    string formula = ((Cell)sender).Text.Substring(1);
-                    int col = char.ToUpper(Convert.ToChar(formula[0])) - 65;
-                    int row = int.Parse(System.Text.RegularExpressions.Regex.Match(formula, @"\d+").Value) - 1;
-                    ((Cell)sender).Value = this.GetCell(col, row).Value;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (senderCell.Text.StartsWith('='))
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    {
+                        string formula = senderCell.Text.Substring(1);
+                        int col = char.ToUpper(Convert.ToChar(formula[0])) - 65;
+                        int row = int.Parse(System.Text.RegularExpressions.Regex.Match(formula, @"\d+").Value) - 1;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                        senderCell.Value = this.GetCell(col, row).Value;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    }
+                    else
+                    {
+                        senderCell.Value = senderCell.Text;
+                    }
                 }
-                else
-                {
-                    ((Cell)sender).Value = ((Cell)sender).Text;
-                }
-            }
 
-            this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
+                this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
+            }
         }
     }
 }
