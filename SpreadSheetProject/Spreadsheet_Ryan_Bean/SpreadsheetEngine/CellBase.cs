@@ -73,7 +73,7 @@ namespace SpreadsheetEngine
             }
         }
 
-        //public void PropertChanged(object sender, EventArgs e)
+        //public void PropertChangedHandler(object sender, EventArgs e)
         //{
         //    for (int i = 0; i < 2; i++)
         //    {

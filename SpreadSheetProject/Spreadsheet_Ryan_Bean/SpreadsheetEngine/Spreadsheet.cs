@@ -18,20 +18,20 @@ namespace SpreadsheetEngine
         public Cell[,] cells;
 
         /// <summary>
-        /// Event Handler for when a cell changes.
-        /// </summary>
-        public event PropertyChangedEventHandler CellPropertyChanged = delegate { };
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
         /// </summary>
         /// <param name="numRows"> Number of Rows in the Spreadsheet. </param>
         /// <param name="numColumns"> Number of Columns in the Spreadsheet. </param>
-        public Spreadsheet(int numRows, int numColumns) 
+        public Spreadsheet(int numRows, int numColumns)
         {
             this.cells = new Cell[numColumns, numRows];
             this.InitializeCells(numColumns, numRows);
         }
+
+        /// <summary>
+        /// Event Handler for when a cell changes.
+        /// </summary>
+        public event PropertyChangedEventHandler CellPropertyChanged = delegate { };
 
         /// <summary>
         /// Gets the number of columns in the Spreadsheet.
@@ -88,7 +88,9 @@ namespace SpreadsheetEngine
 
             newValue = this.cells[copyColumnInt, copyRow].Text;
             this.cells[column, row].Text = newValue;
-            this.cells[column, row].Value = newValue;
+            this.cells[column, row].Value = newText;
+
+            // this.cells[column, row].PropertyChanged += new PropertyChangedEventHandler(this.cells[column, row].PropertyChangedHandler(this.cells[copyColumnInt, copyRow], ));
             return newValue;
         }
 
@@ -102,9 +104,29 @@ namespace SpreadsheetEngine
                 for (int rIndex = 0; rIndex < numRows; rIndex++)
                 {
                     this.cells[cIndex, rIndex] = new Cell(cIndex, rIndex);
-                    //this.cells[cIndex, rIndex].PropertyChanged += this.CellPropertyChanged;
+                    this.cells[cIndex, rIndex].PropertyChanged += this.Spreadsheet_PropertyChanged;
                 }
             }
+        }
+
+        private void Spreadsheet_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Text")
+            {
+                if (((Cell)sender).Text.StartsWith('='))
+                {
+                    string formula = ((Cell)sender).Text.Substring(1);
+                    int col = char.ToUpper(Convert.ToChar(formula[0])) - 65;
+                    int row = int.Parse(System.Text.RegularExpressions.Regex.Match(formula, @"\d+").Value) - 1;
+                    ((Cell)sender).Value = this.GetCell(col, row).Value;
+                }
+                else
+                {
+                    ((Cell)sender).Value = ((Cell)sender).Text;
+                }
+            }
+
+            this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Spreadsheet_Ryan_Bean
             this.dataGridView1.RowTemplate.Height = 29;
             this.dataGridView1.Size = new System.Drawing.Size(800, 450);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellChanged);      
+            //this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellChanged);      
             // 
             // Form1
             // 

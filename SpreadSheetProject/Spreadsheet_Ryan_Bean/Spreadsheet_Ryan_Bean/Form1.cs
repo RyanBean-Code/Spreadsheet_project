@@ -31,24 +31,33 @@ namespace Spreadsheet_Ryan_Bean
                 this.dataGridView1.RowTemplate.HeaderCell.Value = i.ToString();
                 this.dataGridView1.Rows.Add();
             }
+
+            this.spreadsheet.CellPropertyChanged += ACellPropertyHasChanged;
+            this.dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
         }
 
-        /// <summary>
-        /// This is called when the value of a cell changes.
-        /// </summary>
-        /// <param name="sender"> the datagrid view object. </param>
-        /// <param name="e"> the event when the cell changes. </param>
-        public void CellChanged(object sender, EventArgs e)
+        private void DataGridView1_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
         {
-            int row = this.dataGridView1.CurrentCell.RowIndex;
-            int col = this.dataGridView1.CurrentCell.ColumnIndex;
-            if (this.dataGridView1.CurrentCell.Value.ToString().StartsWith('='))
+            int row = e.RowIndex;
+            int col = e.ColumnIndex;
+            string cellText = string.Empty;
+            try
             {
-                this.dataGridView1.CurrentCell.Value = this.spreadsheet.UpdateCell(row, col, (string)this.dataGridView1.CurrentCell.Value);
+                cellText = (string)this.dataGridView1.CurrentCell.Value;
             }
-            else
+            catch (NullReferenceException)
             {
-                this.spreadsheet.GetCell(col, row).Text = (string)this.dataGridView1.CurrentCell.Value;
+                cellText = string.Empty;
+            }
+
+            this.spreadsheet.GetCell(col, row).Text = cellText;
+        }
+
+        private void ACellPropertyHasChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (((SpreadsheetEngine.Cell)sender) != null && e.PropertyName == "Value")
+            {
+                this.dataGridView1.Rows[((SpreadsheetEngine.Cell)sender).RowIndex].Cells[((SpreadsheetEngine.Cell)sender).ColumnIndex].Value = ((SpreadsheetEngine.Cell)sender).Value;
             }
         }
     }
