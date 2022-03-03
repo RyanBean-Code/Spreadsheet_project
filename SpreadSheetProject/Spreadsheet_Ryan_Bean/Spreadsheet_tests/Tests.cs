@@ -59,5 +59,25 @@ namespace Spreadsheet_tests
         {
             Assert.That(this.testSpreadsheet.GetCell(0, 0), Is.EqualTo(this.testSpreadsheet.GetCellAtStringCoordinate("A1")));
         }
+
+        /// <summary>
+        /// The will be a test that the expression tree works properly.
+        /// </summary>
+        [Test]
+        public void TestExpressionTreeEmptyExpression()
+        {
+            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
+            Assert.That(0, Is.EqualTo(testTree.Evaluate()));
+        }
+
+        /// <summary>
+        /// The will be a test that the expression tree works properly.
+        /// </summary>
+        [Test]
+        public void TestExpressionTreeConstantExpression()
+        {
+            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree("1+2+3");
+            Assert.That(6, Is.EqualTo(testTree.Evaluate()));
+        }
     }
 }
