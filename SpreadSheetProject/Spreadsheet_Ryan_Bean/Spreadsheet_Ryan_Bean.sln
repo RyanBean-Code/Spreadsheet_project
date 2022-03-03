@@ -5,14 +5,17 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheet_Ryan_Bean", "Spreadsheet_Ryan_Bean\Spreadsheet_Ryan_Bean.csproj", "{08F883CF-4AB6-4E8C-BE69-E4F3FF31A0E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetEngine", "SpreadsheetEngine\SpreadsheetEngine.csproj", "{1F1E495C-19FA-4580-9C83-DF82610E3C8F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61922ED4-9BC6-4EC7-B08A-611B39F1B9F1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		SpreadsheetEngine\SpreadsheetEngine.csproj = SpreadsheetEngine\SpreadsheetEngine.csproj
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetEngine2", "SpreadsheetEngine2\SpreadsheetEngine2.csproj", "{71A21A97-F133-4501-A3CA-AA6DFC97248D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionTreeDemo", "ExpressionTreeDemo\ExpressionTreeDemo.csproj", "{A0AB7D9D-2E6C-4221-AE3D-9C57E8F4D425}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheet_tests", "Spreadsheet_tests\Spreadsheet_tests.csproj", "{1B0BE28D-841F-4A83-ADBF-062A794C3781}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetEngine", "SpreadsheetEngine\SpreadsheetEngine.csproj", "{1841AB71-46E2-4333-8BA9-C623134A8B93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,14 +27,18 @@ Global
 		{08F883CF-4AB6-4E8C-BE69-E4F3FF31A0E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08F883CF-4AB6-4E8C-BE69-E4F3FF31A0E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08F883CF-4AB6-4E8C-BE69-E4F3FF31A0E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1F1E495C-19FA-4580-9C83-DF82610E3C8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F1E495C-19FA-4580-9C83-DF82610E3C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1F1E495C-19FA-4580-9C83-DF82610E3C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F1E495C-19FA-4580-9C83-DF82610E3C8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71A21A97-F133-4501-A3CA-AA6DFC97248D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71A21A97-F133-4501-A3CA-AA6DFC97248D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71A21A97-F133-4501-A3CA-AA6DFC97248D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71A21A97-F133-4501-A3CA-AA6DFC97248D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0AB7D9D-2E6C-4221-AE3D-9C57E8F4D425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0AB7D9D-2E6C-4221-AE3D-9C57E8F4D425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0AB7D9D-2E6C-4221-AE3D-9C57E8F4D425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0AB7D9D-2E6C-4221-AE3D-9C57E8F4D425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B0BE28D-841F-4A83-ADBF-062A794C3781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B0BE28D-841F-4A83-ADBF-062A794C3781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B0BE28D-841F-4A83-ADBF-062A794C3781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B0BE28D-841F-4A83-ADBF-062A794C3781}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1841AB71-46E2-4333-8BA9-C623134A8B93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1841AB71-46E2-4333-8BA9-C623134A8B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1841AB71-46E2-4333-8BA9-C623134A8B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1841AB71-46E2-4333-8BA9-C623134A8B93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

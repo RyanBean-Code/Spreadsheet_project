@@ -1,7 +1,6 @@
 ﻿// <copyright file="Spreadsheet.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
 namespace SpreadsheetEngine
 {
     using System;
@@ -57,12 +56,29 @@ namespace SpreadsheetEngine
         /// <returns> The Cell at the Given indices or null if the cell does not exist. </returns>
         public Cell? GetCell(int cIndex, int rIndex)
         {
-            if (cIndex <= this.cells.GetLength(0) + 1 && rIndex <= this.cells.GetLength(1) + 1)
+            if (cIndex < this.cells.GetLength(0) && rIndex <= this.cells.GetLength(1) && cIndex >= 0 && rIndex >= 0)
             {
                 return this.cells[cIndex, rIndex];
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the cell at the given string coordinate.
+        /// </summary>
+        /// <param name="coordinate"> The cells location, eg. "A2". </param>
+        /// <returns> The cell at the given location. </returns>
+        public Cell? GetCellAtStringCoordinate(string? coordinate)
+        {
+            if (string.IsNullOrEmpty(coordinate))
+            {
+                return null;
+            }
+
+            int col = char.ToUpper(Convert.ToChar(coordinate[0])) - 65;
+            int row = int.Parse(System.Text.RegularExpressions.Regex.Match(coordinate, @"\d+").Value) - 1;
+            return this.GetCell(col, row);
         }
 
         /// <summary>
@@ -96,11 +112,8 @@ namespace SpreadsheetEngine
                     if (senderCell.Text.StartsWith('='))
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                     {
-                        string formula = senderCell.Text.Substring(1);
-                        int col = char.ToUpper(Convert.ToChar(formula[0])) - 65;
-                        int row = int.Parse(System.Text.RegularExpressions.Regex.Match(formula, @"\d+").Value) - 1;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                        senderCell.Value = this.GetCell(col, row).Value;
+                        senderCell.Value = this.GetCellAtStringCoordinate(senderCell.Text.Substring(1)).Value;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                     }
                     else

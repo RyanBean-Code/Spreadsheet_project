@@ -13,12 +13,14 @@ namespace CptS321
     /// <summary>
     /// Expression Tree clas for evalualting expressions the tree way.
     /// </summary>
-    internal class ExpressionTree
+    public class ExpressionTree
     {
-        /// <summary>
-        /// String which will hold the expression.
-        /// </summary>
-        private string? expression;
+        ///// <summary>
+        ///// String which will hold the expression.
+        ///// </summary>
+        //private string? expression;
+
+        private Node root;
 
         /// <summary>
         /// Dictionary which will contian the varible for my expression.
@@ -31,8 +33,9 @@ namespace CptS321
         /// <param name="newExpression"> This is the expression to be evaulated. </param>
         public ExpressionTree(string newExpression = "A1+B1+C1")
         {
-            this.expression = newExpression;
-            this.varDictionary = new Dictionary<string, double>(3);
+            //this.expression = newExpression;
+            //this.varDictionary = new Dictionary<string, double>(3);
+            this.root = Compile(newExpression);
         }
 
         /// <summary>
@@ -62,7 +65,45 @@ namespace CptS321
             return result;
         }
 
+        private static Node? Compile(string expression)
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return null;
+            }
 
 
+
+            return null;
+        }
+
+        private abstract class Node
+        {
+        }
+
+        private class ConstantNode : Node
+        {
+            public double Value { get; set; }
+        }
+
+        private class VariableNode : Node
+        {
+            public string? Name { get; set; }
+        }
+
+        private class OperatorNode : Node
+        {
+            public OperatorNode(char newOperator)
+            {
+                this.Operator = newOperator;
+                this.Left = this.Right = null;
+            }
+
+            public char Operator { get; set; }
+
+            public Node? Left { get; set; }
+
+            public Node? Right { get; set; }
+        }
     }
 }
