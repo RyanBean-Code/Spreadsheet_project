@@ -13,3 +13,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "No it shouldn't.", Scope = "member", Target = "~F:SpreadsheetEngine.Spreadsheet.cells")]
 [assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "No it shouldn't", Scope = "member", Target = "~F:SpreadsheetEngine.Spreadsheet.cells")]
 [assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1130:Use lambda syntax", Justification = "No I'm not going to do that.", Scope = "member", Target = "~E:SpreadsheetEngine.Spreadsheet.CellPropertyChanged")]
+[assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:Elements should be ordered by access", Justification = "It's either this or have static members come first.", Scope = "member", Target = "~M:CptS321.ExpressionTree.SetVariable(System.String,System.Double)")]
