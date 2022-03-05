@@ -26,12 +26,12 @@ namespace ExpressionTreeDemo
                 switch (option)
                 {
                     case 1: // Enter Expression
-                        Console.Clear();
-                        Console.WriteLine("Enter An Expression: ");
+                        // Console.Clear();
+                        Console.Write("Enter An Expression: ");
                         tree = new CptS321.ExpressionTree(Console.ReadLine());
                         break;
                     case 2: // Set Varible Value
-                        Console.Clear();
+                        // Console.Clear();
                         Console.Write("Enter the Variable Name: ");
                         string? varName = Console.ReadLine();
                         Console.Write("\nEnter the Variable Value: ");
@@ -39,7 +39,7 @@ namespace ExpressionTreeDemo
                         tree.SetVariable(varName, Convert.ToDouble(varValue));
                         break;
                     case 3: // Evaluate The Expression
-                        Console.Clear();
+                        // Console.Clear();
                         Console.WriteLine("Evaluation: " + Convert.ToString(tree.Evaluate()) + "\n");
                         break;
                     case 4: // Exit
@@ -49,9 +49,7 @@ namespace ExpressionTreeDemo
                         Console.WriteLine("Invalid Option!");
                         break;
                 }
-
             } while (option != 4);
         }
     }
-
 }

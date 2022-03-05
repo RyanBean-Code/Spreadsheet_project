@@ -24,7 +24,6 @@ namespace Spreadsheet_tests
             this.testSpreadsheet = new SpreadsheetEngine.Spreadsheet(50, 26);
         }
 
-
         /// <summary>
         /// Method that runs before each test.
         /// </summary>
