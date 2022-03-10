@@ -115,6 +115,7 @@ namespace Spreadsheet_tests
         /// <summary>
         /// This test the method CreatePostfixExpression() in the ExpressionTree class.
         /// </summary>
+        [Test]
         public void TestCreatePostfixExpression()
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
@@ -136,20 +137,19 @@ namespace Spreadsheet_tests
         /// <summary>
         /// This test the method CreatePostfixExpression() in the ExpressionTree class.
         /// </summary>
+        [Test]
         public void TestCreatePostfixExpression2()
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            List<string> testListResult = new List<string>() //  "3 4 2 1 − * +"
-            {
-                "3",
-                "4",
-                "2",
-                "1",
-                "-",
-                "*",
-                "+",
-            };
-            List<string> testListPrefix = new List<string>() // "3 + 4 * (2 − 1)"
+            Queue<string> testResult = new Queue<string>(); //  "3 4 2 1 − * +"
+            testResult.Enqueue("3");
+            testResult.Enqueue("4");
+            testResult.Enqueue("2");
+            testResult.Enqueue("1");
+            testResult.Enqueue("-");
+            testResult.Enqueue("*");
+            testResult.Enqueue("+");
+            List<string> testPrefix = new List<string>() // "3 + 4 * (2 − 1)"
             {
                 "3",
                 "+",
@@ -161,7 +161,7 @@ namespace Spreadsheet_tests
                 "1",
                 ")",
             };
-            Assert.That(testListResult, Is.EqualTo(testTree.CreatePostfixExpression(testListPrefix)));
+            Assert.That(testResult, Is.EqualTo(testTree.CreatePostfixExpression(testPrefix)));
         }
     }
 }

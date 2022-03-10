@@ -6,6 +6,7 @@ namespace CptS321
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -198,7 +199,7 @@ namespace CptS321
             if (!string.IsNullOrEmpty(exp))
             {
                 List<string> prefixExpression = this.CreateTokenizedExpression(exp);
-                List<string> postfixExpression = this.CreatePostfixExpression(prefixExpression);
+                Queue<string> postfixExpression = this.CreatePostfixExpression(prefixExpression);
             }
 
             return null;
@@ -209,9 +210,80 @@ namespace CptS321
         /// </summary>
         /// <param name="prefixExp"> The expression in prefix form. </param>
         /// <returns> A list of Tokens in Postfix order. </returns>
-        public List<string> CreatePostfixExpression(List<string> prefixExp)
+        public Queue<string> CreatePostfixExpression(List<string> prefixExp)
         {
-            
+            Queue<string> postfixExp = new Queue<string>();
+            Stack<string> opStack = new Stack<string>(); // operator stack
+            int number = 0;
+            foreach (string token in prefixExp)
+            {
+                // if the token is a number add it to the queue
+                if (int.TryParse(token, out number))
+                {
+                    postfixExp.Enqueue(token);
+                }
+
+                // if the token is a varible I also want to add it to the queue
+                // One issue here is that the varible name must be longer the 1 letter
+                // "A1", "c39" will be accepted but "x" wont be accepted.
+                else if (token.Length > 1)
+                {
+                    postfixExp.Enqueue(token);
+                }
+
+                // if the token is a function then push it onto the stack
+                // the Expression tree does not yet support functions
+
+                // if the token is an operator then I push it on the stack
+                // an operator should only be 1 character
+                else if (this.IsOperator(token[0]))
+                {
+                    if (opStack.Count > 0)
+                    {
+                        string top = opStack.Peek();
+                        while (top != "(" && this.GetOperatorPresidence(top[0]) >= this.GetOperatorPresidence(token[0]))
+                        {
+                            postfixExp.Enqueue(opStack.Pop());
+                            top = opStack.Peek();
+                        }
+                    }
+
+                    opStack.Push(token);
+                }
+
+                // if the token if left parentheses
+                else if (token == "(")
+                {
+                    opStack.Push(token);
+                }
+
+                // if the token is right parentheses
+                else if (token == ")")
+                {
+                    //string top = opStack.Peek();
+                    while (opStack.Peek() != "(")
+                    {
+                        Debug.Assert(opStack.Count > 0, "Error Compiling Expression Tree: Incorrect Parentheses");
+                        // top = opStack.Pop();
+                        postfixExp.Enqueue(opStack.Pop());
+                    }
+
+                    Debug.Assert(opStack.Peek() == "(", "Error Compiling Expression Tree: Incorrect Parentheses");
+                    opStack.Pop();
+
+                    // if there is a function token at the top of the stack then
+                    // pop the function from the operator stack into the output queue
+                    // The tree does not yet support functions
+                }
+            }
+
+            while (opStack.Count != 0)
+            {
+                Debug.Assert(opStack.Peek() != "(", "Error Compiling Expression Tree: Incorrect Parentheses");
+                postfixExp.Enqueue(opStack.Pop());
+            }
+
+            return postfixExp;
         }
 
         /// <summary>
@@ -228,7 +300,7 @@ namespace CptS321
             while (i < exp.Length)
             {
                 start = i;
-                while (i < exp.Length && !this.IsOperatorOrParentheses(exp[i]))
+                while (i < exp.Length && !(this.IsOperator(exp[i]) || this.IsParentheses(exp[i])))
                 {
                     substringLength++;
                     i++;
@@ -252,9 +324,36 @@ namespace CptS321
         /// </summary>
         /// <param name="c"> The Character in Question. </param>
         /// <returns> True if c is an operator, otherwise false. </returns>
-        private bool IsOperatorOrParentheses(char c)
+        private bool IsOperator(char c)
         {
-            return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')';
+            return c == '*' || c == '/' || c == '+' || c == '-';
+        }
+
+        /// <summary>
+        /// Boolean function to determine if the given character is a paranthes
+        /// </summary>
+        /// <param name="c"> The Character in question. </param>
+        /// <returns> True is c is an parenthese. </returns>
+        private bool IsParentheses(char c)
+        {
+            return c == '(' || c == ')';
+        }
+
+        private int GetOperatorPresidence(char op)
+        {
+            switch (op)
+            {
+                case '*':
+                    return 2;
+                case '/':
+                    return 2;
+                case '+':
+                    return 1;
+                case '-':
+                    return 1;
+            }
+
+            throw new NotSupportedException();
         }
     }
 }
