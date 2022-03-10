@@ -1,4 +1,4 @@
-// <copyright file="Tests.cs" company="PlaceholderCompany">
+﻿// <copyright file="Tests.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -112,5 +112,56 @@ namespace Spreadsheet_tests
             Assert.That(testList, Is.EqualTo(testTree.CreateTokenizedExpression("A1+(b4+5)-79*80")));
         }
 
+        /// <summary>
+        /// This test the method CreatePostfixExpression() in the ExpressionTree class.
+        /// </summary>
+        public void TestCreatePostfixExpression()
+        {
+            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
+            List<string> testListResult = new List<string>()
+            {
+                "3",
+                "4",
+                "+",
+            };
+            List<string> testListPrefix = new List<string>()
+            {
+                "3",
+                "+",
+                "4",
+            };
+            Assert.That(testListResult, Is.EqualTo(testTree.CreatePostfixExpression(testListPrefix)));
+        }
+
+        /// <summary>
+        /// This test the method CreatePostfixExpression() in the ExpressionTree class.
+        /// </summary>
+        public void TestCreatePostfixExpression2()
+        {
+            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
+            List<string> testListResult = new List<string>() //  "3 4 2 1 − * +"
+            {
+                "3",
+                "4",
+                "2",
+                "1",
+                "-",
+                "*",
+                "+",
+            };
+            List<string> testListPrefix = new List<string>() // "3 + 4 * (2 − 1)"
+            {
+                "3",
+                "+",
+                "4",
+                "*",
+                "(",
+                "2",
+                "-",
+                "1",
+                ")",
+            };
+            Assert.That(testListResult, Is.EqualTo(testTree.CreatePostfixExpression(testListPrefix)));
+        }
     }
 }

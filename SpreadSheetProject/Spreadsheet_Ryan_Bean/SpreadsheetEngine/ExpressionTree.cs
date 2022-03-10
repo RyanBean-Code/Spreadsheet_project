@@ -197,9 +197,21 @@ namespace CptS321
         {
             if (!string.IsNullOrEmpty(exp))
             {
-                List<string> tokenizedExpressionList = this.CreateTokenizedExpression(exp);
+                List<string> prefixExpression = this.CreateTokenizedExpression(exp);
+                List<string> postfixExpression = this.CreatePostfixExpression(prefixExpression);
             }
+
             return null;
+        }
+
+        /// <summary>
+        /// This methods uses Dijkstras algortihm to create a postfix expression.
+        /// </summary>
+        /// <param name="prefixExp"> The expression in prefix form. </param>
+        /// <returns> A list of Tokens in Postfix order. </returns>
+        public List<string> CreatePostfixExpression(List<string> prefixExp)
+        {
+            
         }
 
         /// <summary>
