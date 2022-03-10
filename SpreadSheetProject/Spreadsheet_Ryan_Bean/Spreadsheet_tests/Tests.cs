@@ -81,7 +81,7 @@ namespace Spreadsheet_tests
         }
 
         /// <summary>
-        /// Tests that the 
+        /// Tests that the tokenized string method.
         /// </summary>
         [Test]
         public void TestCreateTokenizedExpressionList()
@@ -90,10 +90,27 @@ namespace Spreadsheet_tests
             List<string> testList = new List<string>()
             {
                 "3",
-                "4",
                 "+",
+                "4",
             };
             Assert.That(testList, Is.EqualTo(testTree.CreateTokenizedExpression("3 + 4")));
+            testList.Clear();
+            testList = new () // A1+(b4+5)-79*80
+            {
+                "A1",
+                "+",
+                "(",
+                "b4",
+                "+",
+                "5",
+                ")",
+                "-",
+                "79",
+                "*",
+                "80",
+            };
+            Assert.That(testList, Is.EqualTo(testTree.CreateTokenizedExpression("A1+(b4+5)-79*80")));
         }
+
     }
 }

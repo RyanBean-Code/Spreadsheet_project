@@ -195,16 +195,54 @@ namespace CptS321
 
         private Node? CompileTree(string? exp)
         {
-            if(!string.IsNullOrEmpty(exp))
+            if (!string.IsNullOrEmpty(exp))
             {
                 List<string> tokenizedExpressionList = this.CreateTokenizedExpression(exp);
             }
             return null;
         }
 
-        public internal List<string> CreateTokenizedExpression(string exp)
+        /// <summary>
+        /// This will return a list of strings that holds the tokens of the expression string.
+        /// </summary>
+        /// <param name="exp"> The string to be tokenized. </param>
+        /// <returns> A list of tokens. </returns>
+        public List<string> CreateTokenizedExpression(string exp)
         {
+            List<string> tokens = new List<string>();
+            int substringLength = 0;
+            int i = 0; // index
+            int start = 0;
+            while (i < exp.Length)
+            {
+                start = i;
+                while (i < exp.Length && !this.IsOperatorOrParentheses(exp[i]))
+                {
+                    substringLength++;
+                    i++;
+                }
 
+                if (substringLength == 0)
+                {
+                    substringLength = 1;
+                }
+
+                tokens.Add(exp.Substring(start, substringLength).Trim());
+                i = start + substringLength;
+                substringLength = 0;
+            }
+
+            return tokens;
+        }
+
+        /// <summary>
+        /// Boolen function to determine is the given character is an operator.
+        /// </summary>
+        /// <param name="c"> The Character in Question. </param>
+        /// <returns> True if c is an operator, otherwise false. </returns>
+        private bool IsOperatorOrParentheses(char c)
+        {
+            return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')';
         }
     }
 }
