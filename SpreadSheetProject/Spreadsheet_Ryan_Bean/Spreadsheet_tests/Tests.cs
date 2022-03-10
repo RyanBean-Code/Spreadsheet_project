@@ -4,6 +4,7 @@
 
 namespace Spreadsheet_tests
 {
+    using System.Collections.Generic;
     using NUnit.Framework;
 
     /// <summary>
@@ -77,6 +78,22 @@ namespace Spreadsheet_tests
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree("1+2+3");
             Assert.That(6, Is.EqualTo(testTree.Evaluate()));
+        }
+
+        /// <summary>
+        /// Tests that the 
+        /// </summary>
+        [Test]
+        public void TestCreateTokenizedExpressionList()
+        {
+            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
+            List<string> testList = new List<string>()
+            {
+                "3",
+                "4",
+                "+",
+            };
+            Assert.That(testList, Is.EqualTo(testTree.CreateTokenizedExpression("3 + 4")));
         }
     }
 }

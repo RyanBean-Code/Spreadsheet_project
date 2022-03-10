@@ -9,6 +9,7 @@ namespace CptS321
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using SpreadsheetEngine;
 
     /// <summary>
     /// Expression Tree clas for evalualting expressions the tree way.
@@ -192,65 +193,18 @@ namespace CptS321
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// Abtract base class of node so all nodes are compatible with eachother.
-        /// </summary>
-        private abstract class Node
+        private Node? CompileTree(string? exp)
         {
-        }
-
-        /// <summary>
-        /// This node represents a Constant Value, eg 1.5.
-        /// </summary>
-        private class ConstantNode : Node
-        {
-            /// <summary>
-            /// Gets or sets the value of the node.
-            /// </summary>
-            public double Value { get; set; }
-        }
-
-        /// <summary>
-        /// Represents a variable, eg "A1".
-        /// The value of this node is stored in the var dictionary.
-        /// </summary>
-        private class VariableNode : Node
-        {
-            /// <summary>
-            /// Gets or sets the name of the variable.
-            /// </summary>
-            public string? Name { get; set; }
-        }
-
-        /// <summary>
-        /// This node represents and operator, eg '+' or '*'.
-        /// </summary>
-        private class OperatorNode : Node
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="OperatorNode"/> class.
-            /// </summary>
-            /// <param name="newOperator"> The operator which the node is. </param>
-            public OperatorNode(char newOperator)
+            if(!string.IsNullOrEmpty(exp))
             {
-                this.Operator = newOperator;
-                this.Left = this.Right = null;
+                List<string> tokenizedExpressionList = this.CreateTokenizedExpression(exp);
             }
+            return null;
+        }
 
-            /// <summary>
-            /// Gets or sets the operator.
-            /// </summary>
-            public char Operator { get; set; }
+        public internal List<string> CreateTokenizedExpression(string exp)
+        {
 
-            /// <summary>
-            /// Gets or sets the left node.
-            /// </summary>
-            public Node? Left { get; set; }
-
-            /// <summary>
-            /// Gets or sets the right node.
-            /// </summary>
-            public Node? Right { get; set; }
         }
     }
 }
