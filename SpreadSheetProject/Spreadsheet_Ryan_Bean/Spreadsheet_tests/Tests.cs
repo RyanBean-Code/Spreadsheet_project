@@ -120,17 +120,15 @@ namespace Spreadsheet_tests
         public void TestCreatePostfixExpression()
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            Queue<Node> testResult = new Queue<Node>();
-            testResult.Enqueue(new ConstantNode(3));
-            testResult.Enqueue(new ConstantNode(4));
-            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('+'));
             List<string> testListPrefix = new List<string>()
             {
                 "3",
                 "+",
                 "4",
             };
-            Assert.That(testResult, Is.EqualTo(testTree.CreatePostfixExpression(testListPrefix)));
+            Queue<Node> testResult = testTree.CreatePostfixExpression(testListPrefix);
+            string resultString = this.ConvertQueueToString(testResult);
+            Assert.That("3 4 +", Is.EqualTo(resultString));
         }
 
         /// <summary>
@@ -140,14 +138,7 @@ namespace Spreadsheet_tests
         public void TestCreatePostfixExpression2()
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            Queue<Node> testResult = new Queue<Node>(); //  "3 4 2 1 − * +"
-            testResult.Enqueue(new ConstantNode(3));
-            testResult.Enqueue(new ConstantNode(4));
-            testResult.Enqueue(new ConstantNode(2));
-            testResult.Enqueue(new ConstantNode(1));
-            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('-'));
-            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('*'));
-            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('+'));
+            string testAns = "3 4 2 1 - * +";
             List<string> testPrefix = new List<string>() // "3 + 4 * (2 − 1)"
             {
                 "3",
@@ -160,7 +151,35 @@ namespace Spreadsheet_tests
                 "1",
                 ")",
             };
-            Assert.That(testResult, Is.EqualTo(testTree.CreatePostfixExpression(testPrefix)));
+            Queue<Node> testResult = testTree.CreatePostfixExpression(testPrefix);
+            string resultString = this.ConvertQueueToString(testResult);
+            Assert.That(testAns, Is.EqualTo(resultString));
+        }
+
+
+        private string ConvertQueueToString(Queue<Node> testResult)
+        {
+            string resultString = string.Empty;
+            while (testResult.Count > 0)
+            {
+                Node temp = testResult.Dequeue();
+                if (temp is OperatorNode)
+                {
+                    resultString += ((OperatorNode)temp).Operator.ToString();
+                }
+                else if (temp is VariableNode)
+                {
+                    resultString += ((VariableNode)temp).Name;
+                }
+                else if (temp is ConstantNode)
+                {
+                    resultString += ((ConstantNode)temp).Value.ToString();
+                }
+
+                resultString += " ";
+            }
+
+            return resultString.Trim();
         }
     }
 }

@@ -33,7 +33,7 @@ namespace CptS321
         /// <param name="newExpression"> This is the expression to be evaulated. </param>
         public ExpressionTree(string? newExpression = "A1+B1+C1")
         {
-            this.root = null;//CompileTree(newExpression);
+            this.root = this.CompileTree(newExpression);
             this.varDictionary = new Dictionary<string, double>(10);
         }
 
@@ -198,7 +198,23 @@ namespace CptS321
             {
                 List<string> prefixExpression = this.CreateTokenizedExpression(exp);
                 Queue<Node> postfixExpression = this.CreatePostfixExpression(prefixExpression);
-                
+                Stack<Node> operandStack = new Stack<Node>();
+                while (postfixExpression.Count > 0)
+                {
+                    Node temp = postfixExpression.Dequeue();
+                    if (temp is OperatorNode)
+                    {
+                        ((OperatorNode)temp).Left = operandStack.Pop();
+                        ((OperatorNode)temp).Right = operandStack.Pop();
+                        operandStack.Push(temp);
+                    }
+                    else
+                    {
+                        operandStack.Push(temp);
+                    }
+                }
+
+                return operandStack.Pop();
             }
 
             return null;
