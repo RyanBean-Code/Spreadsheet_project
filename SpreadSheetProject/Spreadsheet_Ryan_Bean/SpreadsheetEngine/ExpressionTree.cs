@@ -37,75 +37,6 @@ namespace CptS321
             this.varDictionary = new Dictionary<string, double>(10);
         }
 
-        ///// <summary>
-        ///// Compiles the whole tree together.
-        ///// </summary>
-        ///// <param name="expression"> The expression to compile into a tree. </param>
-        ///// <returns> A tree which is fully compiled. </returns>
-        //private static Node? Compile(string? expression)
-        //{
-        //    if (string.IsNullOrEmpty(expression))
-        //    {
-        //        return null;
-        //    }
-
-        //    // define the operators we want to look for in that order
-        //    char[] operators = { '+', '-', '*', '/', /*'^'*/ };
-        //    foreach (char op in operators)
-        //    {
-        //        Node n = Compile(expression, op);
-        //        if (n != null)
-        //        {
-        //            return n;
-        //        }
-        //    }
-
-        //    // what can we see here?
-        //    double number;
-
-        //    // a constant
-        //    if (double.TryParse(expression, out number))
-        //    {
-        //        // We need a ConstantNode
-        //        return new ConstantNode()
-        //        {
-        //            Value = number,
-        //        };
-        //    }
-
-        //    // or variable
-        //    else
-        //    {
-        //        // We need a VariableNode
-        //        return new VariableNode()
-        //        {
-        //            Name = expression,
-        //        };
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Overloaded instance of Compile to linkn together operator nodes.
-        ///// </summary>
-        ///// <param name="expression"> the Expression being evaulated. </param>
-        ///// <param name="op"> The operator of the node. </param>
-        ///// <returns> A tree of operators linked togther. </returns>
-        //private static Node? Compile(string? expression, char op)
-        //{
-        //    for (int i = expression.Length - 1; i >= 0; i--)
-        //    {
-        //        if (op == expression[i])
-        //        {
-        //            OperatorNode operatorNode = new OperatorNode(expression[i]);
-        //            operatorNode.Left = Compile(expression.Substring(0, i));
-        //            operatorNode.Right = Compile(expression.Substring(i + 1));
-        //            return operatorNode;
-        //        }
-        //    }
-
-        //    return null;
-        //}
-
         /// <summary>
         /// Sets the variable in the dictionary to the value.
         /// </summary>
@@ -204,8 +135,8 @@ namespace CptS321
                     Node temp = postfixExpression.Dequeue();
                     if (temp is OperatorNode)
                     {
-                        ((OperatorNode)temp).Left = operandStack.Pop();
                         ((OperatorNode)temp).Right = operandStack.Pop();
+                        ((OperatorNode)temp).Left = operandStack.Pop();
                         operandStack.Push(temp);
                     }
                     else
@@ -253,16 +184,12 @@ namespace CptS321
                 // an operator should only be 1 character
                 else if (this.IsOperator(token[0]))
                 {
-                    //if (opStack.Count > 0)
-                    // {
-                        while (opStack.Count > 0 && opStack.Peek() != "(" && this.GetOperatorPresidence(opStack.Peek()[0]) >= this.GetOperatorPresidence(token[0]))
-                        {
-                            string top = opStack.Peek();
-                            postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0])); //opStack.Pop());
-                            opStack.Pop();
-                            //top = opStack.Peek();
-                        }
-                    //}
+                    while (opStack.Count > 0 && opStack.Peek() != "(" && this.GetOperatorPresidence(opStack.Peek()[0]) >= this.GetOperatorPresidence(token[0]))
+                    {
+                        string top = opStack.Peek();
+                        postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0]));
+                        opStack.Pop();
+                    }
 
                     opStack.Push(token);
                 }
@@ -328,12 +255,22 @@ namespace CptS321
                     substringLength = 1;
                 }
 
-                tokens.Add(exp.Substring(start, substringLength).Trim());
+                string tokenString = exp.Substring(start, substringLength).Trim();
+                if (!string.IsNullOrEmpty(tokenString))
+                {
+                    tokens.Add(tokenString);
+                }
+
                 i = start + substringLength;
                 substringLength = 0;
             }
 
             return tokens;
+        }
+
+        private string InOrderTraversal(Node tree)
+        {
+            throw new Exception();
         }
 
         /// <summary>
@@ -356,6 +293,12 @@ namespace CptS321
             return c == '(' || c == ')';
         }
 
+        /// <summary>
+        /// Returns the presidence of the operator given.
+        /// </summary>
+        /// <param name="op"> the operator. </param>
+        /// <returns> an integer. </returns>
+        /// <exception cref="NotSupportedException"> if the operator is not supported. </exception>
         private int GetOperatorPresidence(char op)
         {
             switch (op)
