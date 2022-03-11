@@ -156,6 +156,14 @@ namespace Spreadsheet_tests
             Assert.That(testAns, Is.EqualTo(resultString));
         }
 
+        /// <summary>
+        /// Tests the Evaulate() method in the Expression Tree class
+        /// </summary>
+        public void TestEvaulateTree()
+        {
+            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree("3 + 4 * (2 - 1)");
+            Assert.That(7, Is.EqualTo(testTree.Evaluate()));
+        }
 
         private string ConvertQueueToString(Queue<Node> testResult)
         {
