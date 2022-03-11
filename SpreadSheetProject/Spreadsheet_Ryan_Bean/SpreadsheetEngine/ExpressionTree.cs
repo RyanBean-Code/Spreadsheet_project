@@ -174,18 +174,16 @@ namespace CptS321
 
             if (node is OperatorNode && node != null)
             {
-                switch (((OperatorNode)node).Operator)
+                switch ((OperatorNode)node)
                 {
-                    case '+':
+                    case AdditionNode:
                         return this.Evaluate(((OperatorNode)node).Left) + this.Evaluate(((OperatorNode)node).Right);
-                    case '-':
+                    case SubtractionNode:
                         return this.Evaluate(((OperatorNode)node).Left) - this.Evaluate(((OperatorNode)node).Right);
-                    case '*':
+                    case MultiplicationNode:
                         return this.Evaluate(((OperatorNode)node).Left) * this.Evaluate(((OperatorNode)node).Right);
-                    case '/':
+                    case DivisionNode:
                         return this.Evaluate(((OperatorNode)node).Left) / this.Evaluate(((OperatorNode)node).Right);
-                    /*case '^':
-                        return Math.Pow(this.Evaluate(((OperatorNode)node).Left), this.Evaluate(((OperatorNode)node).Right));*/
                     default:
                         throw new NotSupportedException("Operator " + ((OperatorNode)node).Operator.ToString() + " Not Supported.");
                 }
