@@ -13,7 +13,7 @@ namespace SpreadsheetEngine
     /// <summary>
     /// Handles the creation of operator nodes.
     /// </summary>
-    internal class OperatorNodeFactory
+    public class OperatorNodeFactory
     {
         /// <summary>
         /// Creates an operator node based on the operator passed into the function.
@@ -21,7 +21,7 @@ namespace SpreadsheetEngine
         /// <param name="op"> The operator. </param>
         /// <returns> A new instance of any supported operator node. </returns>
         /// <exception cref="NotSupportedException"> Should only trigger if an operator not supported is passed into the function. </exception>
-        public OperatorNode CreateOperatorNode(char op)
+        public static OperatorNode CreateOperatorNode(char op)
         {
             switch (op)
             {

@@ -12,6 +12,15 @@ namespace SpreadsheetEngine
     public class ConstantNode : Node
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ConstantNode"/> class.
+        /// </summary>
+        /// <param name="value"> The value of the node. </param>
+        public ConstantNode(double value)
+        {
+            this.Value = value;
+        }
+
+        /// <summary>
         /// Gets or sets the value of the node.
         /// </summary>
         public double Value { get; set; }

@@ -6,6 +6,7 @@ namespace Spreadsheet_tests
 {
     using System.Collections.Generic;
     using NUnit.Framework;
+    using SpreadsheetEngine;
 
     /// <summary>
     /// Where i do my tests.
@@ -119,19 +120,17 @@ namespace Spreadsheet_tests
         public void TestCreatePostfixExpression()
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            List<string> testListResult = new List<string>()
-            {
-                "3",
-                "4",
-                "+",
-            };
+            Queue<Node> testResult = new Queue<Node>();
+            testResult.Enqueue(new ConstantNode(3));
+            testResult.Enqueue(new ConstantNode(4));
+            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('+'));
             List<string> testListPrefix = new List<string>()
             {
                 "3",
                 "+",
                 "4",
             };
-            Assert.That(testListResult, Is.EqualTo(testTree.CreatePostfixExpression(testListPrefix)));
+            Assert.That(testResult, Is.EqualTo(testTree.CreatePostfixExpression(testListPrefix)));
         }
 
         /// <summary>
@@ -141,14 +140,14 @@ namespace Spreadsheet_tests
         public void TestCreatePostfixExpression2()
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            Queue<string> testResult = new Queue<string>(); //  "3 4 2 1 − * +"
-            testResult.Enqueue("3");
-            testResult.Enqueue("4");
-            testResult.Enqueue("2");
-            testResult.Enqueue("1");
-            testResult.Enqueue("-");
-            testResult.Enqueue("*");
-            testResult.Enqueue("+");
+            Queue<Node> testResult = new Queue<Node>(); //  "3 4 2 1 − * +"
+            testResult.Enqueue(new ConstantNode(3));
+            testResult.Enqueue(new ConstantNode(4));
+            testResult.Enqueue(new ConstantNode(2));
+            testResult.Enqueue(new ConstantNode(1));
+            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('-'));
+            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('*'));
+            testResult.Enqueue(OperatorNodeFactory.CreateOperatorNode('+'));
             List<string> testPrefix = new List<string>() // "3 + 4 * (2 − 1)"
             {
                 "3",

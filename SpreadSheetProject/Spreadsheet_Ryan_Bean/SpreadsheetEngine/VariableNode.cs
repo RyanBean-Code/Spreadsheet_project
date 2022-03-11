@@ -13,6 +13,15 @@ namespace SpreadsheetEngine
     public class VariableNode : Node
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="VariableNode"/> class.
+        /// </summary>
+        /// <param name="name"> name of the Varible. </param>
+        public VariableNode(string name)
+        {
+            this.Name = name;
+        }
+
+        /// <summary>
         /// Gets or sets the name of the variable.
         /// </summary>
         public string? Name { get; set; }

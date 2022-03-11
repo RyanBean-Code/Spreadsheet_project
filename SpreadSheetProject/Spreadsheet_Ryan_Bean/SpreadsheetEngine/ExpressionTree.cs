@@ -33,78 +33,78 @@ namespace CptS321
         /// <param name="newExpression"> This is the expression to be evaulated. </param>
         public ExpressionTree(string? newExpression = "A1+B1+C1")
         {
-            this.root = Compile(newExpression);
+            this.root = null;//CompileTree(newExpression);
             this.varDictionary = new Dictionary<string, double>(10);
         }
 
-        /// <summary>
-        /// Compiles the whole tree together.
-        /// </summary>
-        /// <param name="expression"> The expression to compile into a tree. </param>
-        /// <returns> A tree which is fully compiled. </returns>
-        private static Node? Compile(string? expression)
-        {
-            if (string.IsNullOrEmpty(expression))
-            {
-                return null;
-            }
+        ///// <summary>
+        ///// Compiles the whole tree together.
+        ///// </summary>
+        ///// <param name="expression"> The expression to compile into a tree. </param>
+        ///// <returns> A tree which is fully compiled. </returns>
+        //private static Node? Compile(string? expression)
+        //{
+        //    if (string.IsNullOrEmpty(expression))
+        //    {
+        //        return null;
+        //    }
 
-            // define the operators we want to look for in that order
-            char[] operators = { '+', '-', '*', '/', /*'^'*/ };
-            foreach (char op in operators)
-            {
-                Node n = Compile(expression, op);
-                if (n != null)
-                {
-                    return n;
-                }
-            }
+        //    // define the operators we want to look for in that order
+        //    char[] operators = { '+', '-', '*', '/', /*'^'*/ };
+        //    foreach (char op in operators)
+        //    {
+        //        Node n = Compile(expression, op);
+        //        if (n != null)
+        //        {
+        //            return n;
+        //        }
+        //    }
 
-            // what can we see here?
-            double number;
+        //    // what can we see here?
+        //    double number;
 
-            // a constant
-            if (double.TryParse(expression, out number))
-            {
-                // We need a ConstantNode
-                return new ConstantNode()
-                {
-                    Value = number,
-                };
-            }
+        //    // a constant
+        //    if (double.TryParse(expression, out number))
+        //    {
+        //        // We need a ConstantNode
+        //        return new ConstantNode()
+        //        {
+        //            Value = number,
+        //        };
+        //    }
 
-            // or variable
-            else
-            {
-                // We need a VariableNode
-                return new VariableNode()
-                {
-                    Name = expression,
-                };
-            }
-        }
+        //    // or variable
+        //    else
+        //    {
+        //        // We need a VariableNode
+        //        return new VariableNode()
+        //        {
+        //            Name = expression,
+        //        };
+        //    }
+        //}
 
-        /// <summary>
-        /// Overloaded instance of Compile to linkn together operator nodes.
-        /// </summary>
-        /// <param name="expression"> the Expression being evaulated. </param>
-        /// <param name="op"> The operator of the node. </param>
-        /// <returns> A tree of operators linked togther. </returns>
-        private static Node? Compile(string? expression, char op)
-        {
-            for (int i = expression.Length - 1; i >= 0; i--)
-            {
-                if (op == expression[i])
-                {
-                    OperatorNode operatorNode = new OperatorNode(expression[i]);
-                    operatorNode.Left = Compile(expression.Substring(0, i));
-                    operatorNode.Right = Compile(expression.Substring(i + 1));
-                    return operatorNode;
-                }
-            }
+        ///// <summary>
+        ///// Overloaded instance of Compile to linkn together operator nodes.
+        ///// </summary>
+        ///// <param name="expression"> the Expression being evaulated. </param>
+        ///// <param name="op"> The operator of the node. </param>
+        ///// <returns> A tree of operators linked togther. </returns>
+        //private static Node? Compile(string? expression, char op)
+        //{
+        //    for (int i = expression.Length - 1; i >= 0; i--)
+        //    {
+        //        if (op == expression[i])
+        //        {
+        //            OperatorNode operatorNode = new OperatorNode(expression[i]);
+        //            operatorNode.Left = Compile(expression.Substring(0, i));
+        //            operatorNode.Right = Compile(expression.Substring(i + 1));
+        //            return operatorNode;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         /// <summary>
         /// Sets the variable in the dictionary to the value.
@@ -197,7 +197,8 @@ namespace CptS321
             if (!string.IsNullOrEmpty(exp))
             {
                 List<string> prefixExpression = this.CreateTokenizedExpression(exp);
-                Queue<string> postfixExpression = this.CreatePostfixExpression(prefixExpression);
+                Queue<Node> postfixExpression = this.CreatePostfixExpression(prefixExpression);
+                
             }
 
             return null;
@@ -208,17 +209,17 @@ namespace CptS321
         /// </summary>
         /// <param name="prefixExp"> The expression in prefix form. </param>
         /// <returns> A list of Tokens in Postfix order. </returns>
-        public Queue<string> CreatePostfixExpression(List<string> prefixExp)
+        public Queue<Node> CreatePostfixExpression(List<string> prefixExp)
         {
-            Queue<string> postfixExp = new Queue<string>();
+            Queue<Node> postfixExp = new Queue<Node>();
             Stack<string> opStack = new Stack<string>(); // operator stack
-            int number = 0;
+            double number = 0;
             foreach (string token in prefixExp)
             {
                 // if the token is a number add it to the queue
-                if (int.TryParse(token, out number))
+                if (double.TryParse(token, out number))
                 {
-                    postfixExp.Enqueue(token);
+                    postfixExp.Enqueue(new ConstantNode(number));
                 }
 
                 // if the token is a varible I also want to add it to the queue
@@ -226,7 +227,7 @@ namespace CptS321
                 // "A1", "c39" will be accepted but "x" wont be accepted.
                 else if (token.Length > 1)
                 {
-                    postfixExp.Enqueue(token);
+                    postfixExp.Enqueue(new VariableNode(token));
                 }
 
                 // if the token is a function then push it onto the stack
@@ -236,15 +237,16 @@ namespace CptS321
                 // an operator should only be 1 character
                 else if (this.IsOperator(token[0]))
                 {
-                    if (opStack.Count > 0)
-                    {
-                        string top = opStack.Peek();
-                        while (top != "(" && this.GetOperatorPresidence(top[0]) >= this.GetOperatorPresidence(token[0]))
+                    //if (opStack.Count > 0)
+                    // {
+                        while (opStack.Count > 0 && opStack.Peek() != "(" && this.GetOperatorPresidence(opStack.Peek()[0]) >= this.GetOperatorPresidence(token[0]))
                         {
-                            postfixExp.Enqueue(opStack.Pop());
-                            top = opStack.Peek();
+                            string top = opStack.Peek();
+                            postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0])); //opStack.Pop());
+                            opStack.Pop();
+                            //top = opStack.Peek();
                         }
-                    }
+                    //}
 
                     opStack.Push(token);
                 }
@@ -258,12 +260,12 @@ namespace CptS321
                 // if the token is right parentheses
                 else if (token == ")")
                 {
-                    //string top = opStack.Peek();
+                    string top = opStack.Peek();
                     while (opStack.Peek() != "(")
                     {
                         Debug.Assert(opStack.Count > 0, "Error Compiling Expression Tree: Incorrect Parentheses");
-                        // top = opStack.Pop();
-                        postfixExp.Enqueue(opStack.Pop());
+                        top = opStack.Pop();
+                        postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0]));
                     }
 
                     Debug.Assert(opStack.Peek() == "(", "Error Compiling Expression Tree: Incorrect Parentheses");
@@ -278,7 +280,8 @@ namespace CptS321
             while (opStack.Count != 0)
             {
                 Debug.Assert(opStack.Peek() != "(", "Error Compiling Expression Tree: Incorrect Parentheses");
-                postfixExp.Enqueue(opStack.Pop());
+                string top = opStack.Pop();
+                postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0]));
             }
 
             return postfixExp;
