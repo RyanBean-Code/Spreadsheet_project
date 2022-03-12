@@ -28,7 +28,16 @@ namespace ExpressionTreeDemo
                     case 1: // Enter Expression
                         // Console.Clear();
                         Console.Write("Enter An Expression: ");
-                        tree = new CptS321.ExpressionTree(Console.ReadLine());
+                        try
+                        {
+                            tree = new CptS321.ExpressionTree(Console.ReadLine());
+                        }
+                        catch (Exception)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Expression Formatted Incorrectly!");
+                        }
+
                         break;
                     case 2: // Set Varible Value
                         // Console.Clear();

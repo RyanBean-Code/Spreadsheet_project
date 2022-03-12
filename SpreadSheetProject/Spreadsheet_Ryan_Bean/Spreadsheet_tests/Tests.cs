@@ -167,14 +167,21 @@ namespace Spreadsheet_tests
         }
 
         /// <summary>
-        /// Tests teh Evaulate() Method in the ExpressionTree class.
+        /// Tests the Evaulate() Method in the ExpressionTree class.
+        /// Wow Check out this Edge Case testing!!!!.
         /// </summary>
         [Test]
         public void TestEvaulateTree2()
         {
-
+            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
+            Assert.That(0, Is.EqualTo(testTree.Evaluate()));
         }
 
+        /// <summary>
+        /// Just used in some tests to convert a queue object into a string .
+        /// </summary>
+        /// <param name="testResult"> The Queue to be converted into a string. </param>
+        /// <returns> A String. </returns>
         private string ConvertQueueToString(Queue<Node> testResult)
         {
             string resultString = string.Empty;

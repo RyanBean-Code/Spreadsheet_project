@@ -67,91 +67,6 @@ namespace CptS321
         }
 
         /// <summary>
-        /// Used for error checking when evaluating the tree.
-        /// If the user immediatley pushes evaulate in the menu the answer will just be zero.
-        /// </summary>
-        /// <param name="varName"> The name of the variable. </param>
-        /// <returns> The Value of the variable if its in the dictionary otherwise 0. </returns>
-        private double GetVariableValue(string varName)
-        {
-            if (this.varDictionary.ContainsKey(varName))
-            {
-                return this.varDictionary[varName];
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// Overloaded Evaulate function which accepts a node as an agruement.
-        /// This is used do we can recursively evaulate the tree.
-        /// </summary>
-        /// <param name="node"> The node to evaulate. </param>
-        /// <returns> The result of the expression tree. </returns>
-        /// <exception cref="NotSupportedException"> If a non supported operator is entered. </exception>
-        private double Evaluate(Node? node)
-        {
-            if (node is ConstantNode && node != null)
-            {
-                return ((ConstantNode)node).Value;
-            }
-
-            if (node is VariableNode && node != null)
-            {
-                return this.GetVariableValue(((VariableNode)node).Name);
-            }
-
-            if (node is OperatorNode && node != null)
-            {
-                switch ((OperatorNode)node)
-                {
-                    case AdditionNode:
-                        return this.Evaluate(((OperatorNode)node).Left) + this.Evaluate(((OperatorNode)node).Right);
-                    case SubtractionNode:
-                        return this.Evaluate(((OperatorNode)node).Left) - this.Evaluate(((OperatorNode)node).Right);
-                    case MultiplicationNode:
-                        return this.Evaluate(((OperatorNode)node).Left) * this.Evaluate(((OperatorNode)node).Right);
-                    case DivisionNode:
-                        return this.Evaluate(((OperatorNode)node).Left) / this.Evaluate(((OperatorNode)node).Right);
-                    default:
-                        throw new NotSupportedException("Operator " + ((OperatorNode)node).Operator.ToString() + " Not Supported.");
-                }
-            }
-
-            throw new NotSupportedException();
-        }
-
-        private Node? CompileTree(string? exp)
-        {
-            if (!string.IsNullOrEmpty(exp))
-            {
-                List<string> prefixExpression = this.CreateTokenizedExpression(exp);
-                Queue<Node> postfixExpression = this.CreatePostfixExpression(prefixExpression);
-                Stack<Node> operandStack = new Stack<Node>();
-                while (postfixExpression.Count > 0)
-                {
-                    Node temp = postfixExpression.Dequeue();
-                    if (temp is OperatorNode)
-                    {
-                        ((OperatorNode)temp).Right = operandStack.Pop();
-                        ((OperatorNode)temp).Left = operandStack.Pop();
-                        operandStack.Push(temp);
-                    }
-                    else
-                    {
-                        operandStack.Push(temp);
-                    }
-                }
-
-                return operandStack.Pop();
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// This methods uses Dijkstras algortihm to create a postfix expression.
         /// </summary>
         /// <param name="prefixExp"> The expression in prefix form. </param>
@@ -268,9 +183,94 @@ namespace CptS321
             return tokens;
         }
 
-        private string InOrderTraversal(Node tree)
+        /// <summary>
+        /// Used for error checking when evaluating the tree.
+        /// If the user immediatley pushes evaulate in the menu the answer will just be zero.
+        /// </summary>
+        /// <param name="varName"> The name of the variable. </param>
+        /// <returns> The Value of the variable if its in the dictionary otherwise 0. </returns>
+        private double GetVariableValue(string varName)
         {
-            throw new Exception();
+            if (this.varDictionary.ContainsKey(varName))
+            {
+                return this.varDictionary[varName];
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Overloaded Evaulate function which accepts a node as an agruement.
+        /// This is used do we can recursively evaulate the tree.
+        /// </summary>
+        /// <param name="node"> The node to evaulate. </param>
+        /// <returns> The result of the expression tree. </returns>
+        /// <exception cref="NotSupportedException"> If a non supported operator is entered. </exception>
+        private double Evaluate(Node? node)
+        {
+            if (node is ConstantNode && node != null)
+            {
+                return ((ConstantNode)node).Value;
+            }
+
+            if (node is VariableNode && node != null)
+            {
+                return this.GetVariableValue(((VariableNode)node).Name);
+            }
+
+            if (node is OperatorNode && node != null)
+            {
+                switch ((OperatorNode)node)
+                {
+                    case AdditionNode:
+                        return this.Evaluate(((OperatorNode)node).Left) + this.Evaluate(((OperatorNode)node).Right);
+                    case SubtractionNode:
+                        return this.Evaluate(((OperatorNode)node).Left) - this.Evaluate(((OperatorNode)node).Right);
+                    case MultiplicationNode:
+                        return this.Evaluate(((OperatorNode)node).Left) * this.Evaluate(((OperatorNode)node).Right);
+                    case DivisionNode:
+                        return this.Evaluate(((OperatorNode)node).Left) / this.Evaluate(((OperatorNode)node).Right);
+                    default:
+                        throw new NotSupportedException("Operator " + ((OperatorNode)node).Operator.ToString() + " Not Supported.");
+                }
+            }
+
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Builds the Tree using an expression in postfix form.
+        /// </summary>
+        /// <param name="exp"> The Expression in Postfix Form. </param>
+        /// <returns> The Root node of the tree. </returns>
+        private Node? CompileTree(string? exp)
+        {
+            if (!string.IsNullOrEmpty(exp))
+            {
+                List<string> prefixExpression = this.CreateTokenizedExpression(exp);
+                Queue<Node> postfixExpression = this.CreatePostfixExpression(prefixExpression);
+                Stack<Node> operandStack = new Stack<Node>();
+                while (postfixExpression.Count > 0)
+                {
+                    Node temp = postfixExpression.Dequeue();
+                    if (temp is OperatorNode)
+                    {
+                        ((OperatorNode)temp).Right = operandStack.Pop();
+                        ((OperatorNode)temp).Left = operandStack.Pop();
+                        operandStack.Push(temp);
+                    }
+                    else
+                    {
+                        operandStack.Push(temp);
+                    }
+                }
+
+                return operandStack.Pop();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace CptS321
         }
 
         /// <summary>
-        /// Boolean function to determine if the given character is a paranthes
+        /// Boolean function to determine if the given character is a paranthes.
         /// </summary>
         /// <param name="c"> The Character in question. </param>
         /// <returns> True is c is an parenthese. </returns>

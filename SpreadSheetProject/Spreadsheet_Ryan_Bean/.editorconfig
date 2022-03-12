@@ -11,3 +11,6 @@ dotnet_diagnostic.CS8625.severity = suggestion
 
 # CS8604: Possible null reference argument.
 dotnet_diagnostic.CS8604.severity = suggestion
+
+# SA0001: XML comment analysis disabled
+dotnet_diagnostic.SA0001.severity = none

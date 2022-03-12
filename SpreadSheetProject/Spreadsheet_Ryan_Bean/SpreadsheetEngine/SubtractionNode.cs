@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="SubtractionNode.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace SpreadsheetEngine
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Summary.
     /// </summary>
@@ -16,7 +20,7 @@ namespace SpreadsheetEngine
         /// </summary>
         /// <param name="op"> - operator. </param>
         public SubtractionNode(char op = '-')
-            : base (op)
+            : base(op)
         {
         }
     }

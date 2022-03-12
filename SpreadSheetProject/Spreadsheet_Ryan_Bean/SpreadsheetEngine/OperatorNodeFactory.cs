@@ -2,14 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SpreadsheetEngine
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Handles the creation of operator nodes.
     /// </summary>
