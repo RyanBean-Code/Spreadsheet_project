@@ -37,6 +37,29 @@ namespace Spreadsheet_Ryan_Bean
 
             this.spreadsheet.CellPropertyChanged += this.ACellPropertyHasChanged;
             this.dataGridView1.CellEndEdit += this.DataGridView1_CellEndEdit;
+            this.dataGridView1.CellBeginEdit += this.DataGridView1_CellBeginEdit;
+        }
+
+        /// <summary>
+        /// Fires when a cells text starts to change.
+        /// </summary>
+        /// <param name="sender"> datagridview object. </param>
+        /// <param name="e"> the cell that is changing. </param>
+        private void DataGridView1_CellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
+        {
+            int row = e.RowIndex;
+            int col = e.ColumnIndex;
+            string cellText = string.Empty;
+            try
+            {
+                cellText = (string)this.dataGridView1.CurrentCell.Value;
+            }
+            catch
+            {
+                cellText = string.Empty;
+            }
+
+            this.spreadsheet.SetCellValue(col, row, cellText);
         }
 
         /// <summary>

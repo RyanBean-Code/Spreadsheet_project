@@ -33,8 +33,24 @@ namespace CptS321
         /// <param name="newExpression"> This is the expression to be evaulated. </param>
         public ExpressionTree(string? newExpression = "A1+B1+C1")
         {
-            this.root = this.CompileTree(newExpression);
             this.varDictionary = new Dictionary<string, double>(10);
+            this.root = this.CompileTree(newExpression);
+        }
+
+        /// <summary>
+        /// Used to get a list of all the variable names in the expression.
+        /// This will make setting the value of each varible much easier.
+        /// </summary>
+        /// <returns> A list of all the variables in the expression. </returns>
+        public List<string> GetVariableNames()
+        {
+            List<string> varNames = new List<string>();
+            foreach (KeyValuePair<string, double> entry in this.varDictionary)
+            {
+                varNames.Add(entry.Key);
+            }
+
+            return varNames;
         }
 
         /// <summary>
@@ -71,7 +87,7 @@ namespace CptS321
         /// </summary>
         /// <param name="prefixExp"> The expression in prefix form. </param>
         /// <returns> A list of Tokens in Postfix order. </returns>
-        public Queue<Node> CreatePostfixExpression(List<string> prefixExp)
+        private Queue<Node> CreatePostfixExpression(List<string> prefixExp)
         {
             Queue<Node> postfixExp = new Queue<Node>();
             Stack<string> opStack = new Stack<string>(); // operator stack
@@ -90,6 +106,7 @@ namespace CptS321
                 else if (token.Length > 1)
                 {
                     postfixExp.Enqueue(new VariableNode(token));
+                    this.SetVariable(token);
                 }
 
                 // if the token is a function then push it onto the stack
@@ -150,7 +167,7 @@ namespace CptS321
         /// </summary>
         /// <param name="exp"> The string to be tokenized. </param>
         /// <returns> A list of tokens. </returns>
-        public List<string> CreateTokenizedExpression(string exp)
+        private List<string> CreateTokenizedExpression(string exp)
         {
             List<string> tokens = new List<string>();
             int substringLength = 0;

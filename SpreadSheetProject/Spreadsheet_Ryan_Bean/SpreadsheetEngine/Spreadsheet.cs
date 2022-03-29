@@ -5,6 +5,7 @@ namespace SpreadsheetEngine
 {
     using System;
     using System.ComponentModel;
+    using CptS321;
 
     /// <summary>
     /// Class for implementations with the Spreadsheet.
@@ -82,6 +83,18 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// Sets the Value for a cell.
+        /// Is used in the form class in the CellBeginEdit event.
+        /// </summary>
+        /// <param name="cIndex"> Column index of the cell. </param>
+        /// <param name="rIndex"> Row index of the cell. </param>
+        /// <param name="value"> New value of the cell. </param>
+        public void SetCellValue(int cIndex, int rIndex, string value)
+        {
+            this.GetCell(cIndex, rIndex).Value = value;
+        }
+
+        /// <summary>
         /// Initializes all the cells in the spreadsheet.
         /// </summary>
         private void InitializeCells(int numColumns, int numRows)
@@ -108,13 +121,10 @@ namespace SpreadsheetEngine
             {
                 if (e.PropertyName == "Text")
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     if (senderCell.Text.StartsWith('='))
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                     {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                        senderCell.Value = this.GetCellAtStringCoordinate(senderCell.Text.Substring(1)).Value;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        //senderCell.Value = this.GetCellAtStringCoordinate(senderCell.Text.Substring(1)).Value;
+                        this.SetCellValue(senderCell);
                     }
                     else
                     {
@@ -123,6 +133,39 @@ namespace SpreadsheetEngine
                 }
 
                 this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
+            }
+        }
+
+        /// <summary>
+        /// Used to set the value of a cell when the text starts with '=' character.
+        /// </summary>
+        /// <param name="cell"> The Cell value to set. </param>
+        private void SetCellValue(Cell cell)
+        {
+            bool isValid = true;
+            ExpressionTree exp = new ExpressionTree(cell.Text.Substring(1));
+            List<string> varibles = exp.GetVariableNames();
+            foreach (string varName in varibles)
+            {
+                string varValueStr = this.GetCellAtStringCoordinate(varName).Value;
+                double varValue;
+                if (!string.IsNullOrEmpty(varValueStr) && double.TryParse(varValueStr, out varValue))
+                {
+                    exp.SetVariable(varName, varValue);
+                }
+                else
+                {
+                    isValid = false;
+                }
+            }
+
+            if (isValid)
+            {
+                cell.Value = Convert.ToString(exp.Evaluate());
+            }
+            else
+            {
+                cell.Value = cell.Text;
             }
         }
     }
