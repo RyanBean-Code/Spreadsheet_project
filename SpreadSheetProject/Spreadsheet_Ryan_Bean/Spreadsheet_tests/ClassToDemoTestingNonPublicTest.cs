@@ -131,7 +131,7 @@ namespace Spreadsheet_tests
                 if (temp is OperatorNode)
                 {
                     OperatorNode temp1 = ((OperatorNode)temp);
-                    resultString += temp1.GetOperator().ToString();
+                    resultString += temp1.Operator.ToString();
                 }
                 else if (temp is VariableNode)
                 {

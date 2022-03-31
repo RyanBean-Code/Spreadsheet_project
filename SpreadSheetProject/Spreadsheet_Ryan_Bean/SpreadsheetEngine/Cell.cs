@@ -11,6 +11,8 @@ namespace SpreadsheetEngine
     /// </summary>
     public class Cell : CellBase
     {
+        public List<Cell> dependantCells;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
@@ -19,6 +21,7 @@ namespace SpreadsheetEngine
         public Cell(int newColumnIndex, int newRowIndex)
             : base(newColumnIndex, newRowIndex)
         {
+            this.dependantCells = new List<Cell>();
         }
     }
 }

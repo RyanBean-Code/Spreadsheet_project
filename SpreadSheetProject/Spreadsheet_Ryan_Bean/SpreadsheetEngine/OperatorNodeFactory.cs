@@ -53,18 +53,6 @@ namespace SpreadsheetEngine
                 }
             }
 
-            //switch (op)
-            //{
-            //    case '*':
-            //        return new MultiplicationNode();
-            //    case '/':
-            //        return new DivisionNode();
-            //    case '+':
-            //        return new AdditionNode();
-            //    case '-':
-            //        return new SubtractionNode();
-            //}
-
             throw new NotSupportedException();
         }
 

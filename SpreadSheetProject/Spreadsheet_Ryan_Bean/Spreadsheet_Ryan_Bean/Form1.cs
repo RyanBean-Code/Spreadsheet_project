@@ -4,6 +4,8 @@
 
 namespace Spreadsheet_Ryan_Bean
 {
+    using SpreadsheetEngine;
+
     /// <summary>
     /// Where I'll do my stuff.
     /// </summary>

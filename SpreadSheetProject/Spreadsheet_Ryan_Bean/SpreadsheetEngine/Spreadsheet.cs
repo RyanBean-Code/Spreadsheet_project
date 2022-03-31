@@ -17,6 +17,8 @@ namespace SpreadsheetEngine
         /// </summary>
         public Cell[,] cells;
 
+        public Dictionary<Cell, List<Cell>> cellValueDictionary;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
         /// </summary>
@@ -24,6 +26,7 @@ namespace SpreadsheetEngine
         /// <param name="numColumns"> Number of Columns in the Spreadsheet. </param>
         public Spreadsheet(int numRows, int numColumns)
         {
+            this.cellValueDictionary = new Dictionary<Cell, List<Cell>>();
             this.cells = new Cell[numColumns, numRows];
             this.InitializeCells(numColumns, numRows);
         }
@@ -123,7 +126,6 @@ namespace SpreadsheetEngine
                 {
                     if (senderCell.Text.StartsWith('='))
                     {
-                        //senderCell.Value = this.GetCellAtStringCoordinate(senderCell.Text.Substring(1)).Value;
                         this.SetCellValue(senderCell);
                     }
                     else
@@ -147,9 +149,46 @@ namespace SpreadsheetEngine
             List<string> varibles = exp.GetVariableNames();
             foreach (string varName in varibles)
             {
-                string varValueStr = this.GetCellAtStringCoordinate(varName).Value;
+                Cell cellVaribale = this.GetCellAtStringCoordinate(varName);
                 double varValue;
-                if (!string.IsNullOrEmpty(varValueStr) && double.TryParse(varValueStr, out varValue))
+                if (!string.IsNullOrEmpty(cellVaribale.Value) && double.TryParse(cellVaribale.Value, out varValue))
+                {
+                    exp.SetVariable(varName, varValue);
+                }
+                else
+                {
+                    isValid = false;
+                }
+
+                cellVaribale.dependantCells.Add(cell);
+                cellVaribale.PropertyChanged -= this.CellVaribale_PropertyChanged;
+                cellVaribale.PropertyChanged += this.CellVaribale_PropertyChanged;
+            }
+
+            if (isValid)
+            {
+                cell.Value = Convert.ToString(exp.Evaluate());
+            }
+            else
+            {
+                cell.Value = cell.Text;
+            }
+        }
+
+        /// <summary>
+        /// Used to update a cells value when one on the variables in the cells expression changes.
+        /// </summary>
+        /// <param name="cell"> The cell to update. </param>
+        private void UpdateCellValue(Cell cell)
+        {
+            bool isValid = true;
+            ExpressionTree exp = new ExpressionTree(cell.Text.Substring(1));
+            List<string> variables = exp.GetVariableNames();
+            foreach (string varName in variables)
+            {
+                Cell cellVariable = this.GetCellAtStringCoordinate(varName);
+                double varValue;
+                if (double.TryParse(cellVariable.Value, out varValue))
                 {
                     exp.SetVariable(varName, varValue);
                 }
@@ -167,6 +206,75 @@ namespace SpreadsheetEngine
             {
                 cell.Value = cell.Text;
             }
+        }
+
+        /// <summary>
+        /// Used to check whether of not a cell is still dependant on the value of another.
+        /// </summary>
+        /// <param name="cellToUpdate"> The cell thats being updated. </param>
+        /// <param name="cellThatChanged"> The cell that that got changed. </param>
+        /// <returns> True or False. </returns>
+        private bool CheckIfCellIsStillDependant(Cell cellToUpdate, Cell cellThatChanged)
+        {
+            ExpressionTree exp = new ExpressionTree(cellToUpdate.Text.Substring(1));
+            List<string> variables = exp.GetVariableNames();
+            string cellThatChangedName = this.GetCellName(cellThatChanged);
+            if (variables.Contains(cellThatChangedName))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Event Handler to update cell values when one cell that is dependant on another changes.
+        /// </summary>
+        /// <param name="sender"> The cell that just changed </param>
+        /// <param name="e"> Should always be equal to "Value". </param>
+        private void CellVaribale_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            Cell senderCell = (Cell)sender;
+            if (senderCell != null)
+            {
+                if (e.PropertyName == "Value")
+                {
+                    List<Cell> cellsToRemove = new List<Cell>();
+                    foreach (Cell cell in senderCell.dependantCells)
+                    {
+                        if (this.CheckIfCellIsStillDependant(cell, senderCell))
+                        {
+                            this.UpdateCellValue(cell);
+                        }
+                        else
+                        {
+                            cellsToRemove.Add(cell);
+                        }
+                    }
+
+                    foreach (Cell cell in cellsToRemove)
+                    {
+                        senderCell.dependantCells.Remove(cell);
+                    }
+
+                    if (senderCell.dependantCells.Count == 0)
+                    {
+                        senderCell.PropertyChanged -= this.CellVaribale_PropertyChanged;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the cell ex "A1" or "F20".
+        /// </summary>
+        /// <param name="cell"> The cell to get the Name of. </param>
+        /// <returns> The name of the cell in string form. </returns>
+        private string GetCellName(Cell cell)
+        {
+            return Convert.ToString(Convert.ToChar(cell.ColumnIndex + 65)) + Convert.ToString(cell.RowIndex + 1);
         }
     }
 }
