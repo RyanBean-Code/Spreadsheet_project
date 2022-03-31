@@ -23,5 +23,13 @@ namespace SpreadsheetEngine
             : base(op)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubtractionNode"/> class.
+        /// </summary>
+        public SubtractionNode()
+        {
+            this.Operator = '-';
+        }
     }
 }

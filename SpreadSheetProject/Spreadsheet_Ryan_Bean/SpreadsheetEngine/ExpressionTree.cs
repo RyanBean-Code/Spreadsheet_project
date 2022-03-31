@@ -27,12 +27,15 @@ namespace CptS321
         /// </summary>
         private Dictionary<string, double>? varDictionary;
 
+        private OperatorNodeFactory factory;// = new OperatorNodeFactory();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
         /// </summary>
         /// <param name="newExpression"> This is the expression to be evaulated. </param>
         public ExpressionTree(string? newExpression = "A1+B1+C1")
         {
+            this.factory = new OperatorNodeFactory();
             this.varDictionary = new Dictionary<string, double>(10);
             this.root = this.CompileTree(newExpression);
         }
@@ -119,7 +122,7 @@ namespace CptS321
                     while (opStack.Count > 0 && opStack.Peek() != "(" && this.GetOperatorPresidence(opStack.Peek()[0]) >= this.GetOperatorPresidence(token[0]))
                     {
                         string top = opStack.Peek();
-                        postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0]));
+                        postfixExp.Enqueue(this.factory.CreateOperatorNode(top[0]));
                         opStack.Pop();
                     }
 
@@ -140,7 +143,7 @@ namespace CptS321
                     {
                         Debug.Assert(opStack.Count > 0, "Error Compiling Expression Tree: Incorrect Parentheses");
                         top = opStack.Pop();
-                        postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0]));
+                        postfixExp.Enqueue(this.factory.CreateOperatorNode(top[0]));
                     }
 
                     Debug.Assert(opStack.Peek() == "(", "Error Compiling Expression Tree: Incorrect Parentheses");
@@ -156,7 +159,7 @@ namespace CptS321
             {
                 Debug.Assert(opStack.Peek() != "(", "Error Compiling Expression Tree: Incorrect Parentheses");
                 string top = opStack.Pop();
-                postfixExp.Enqueue(OperatorNodeFactory.CreateOperatorNode(top[0]));
+                postfixExp.Enqueue(this.factory.CreateOperatorNode(top[0]));
             }
 
             return postfixExp;
@@ -239,18 +242,19 @@ namespace CptS321
 
             if (node is OperatorNode && node != null)
             {
+                OperatorNode node1 = (OperatorNode)node;
                 switch ((OperatorNode)node)
                 {
                     case AdditionNode:
-                        return this.Evaluate(((OperatorNode)node).Left) + this.Evaluate(((OperatorNode)node).Right);
+                        return this.Evaluate(node1.Left) + this.Evaluate(node1.Right);
                     case SubtractionNode:
-                        return this.Evaluate(((OperatorNode)node).Left) - this.Evaluate(((OperatorNode)node).Right);
+                        return this.Evaluate(node1.Left) - this.Evaluate(node1.Right);
                     case MultiplicationNode:
-                        return this.Evaluate(((OperatorNode)node).Left) * this.Evaluate(((OperatorNode)node).Right);
+                        return this.Evaluate(node1.Left) * this.Evaluate(node1.Right);
                     case DivisionNode:
-                        return this.Evaluate(((OperatorNode)node).Left) / this.Evaluate(((OperatorNode)node).Right);
+                        return this.Evaluate(node1.Left) / this.Evaluate(node1.Right);
                     default:
-                        throw new NotSupportedException("Operator " + ((OperatorNode)node).Operator.ToString() + " Not Supported.");
+                        throw new NotSupportedException("Operator " + node1.Operator.ToString() + " Not Supported.");
                 }
             }
 

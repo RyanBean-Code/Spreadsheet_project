@@ -130,7 +130,8 @@ namespace Spreadsheet_tests
                 Node temp = testResult.Dequeue();
                 if (temp is OperatorNode)
                 {
-                    resultString += ((OperatorNode)temp).Operator.ToString();
+                    OperatorNode temp1 = ((OperatorNode)temp);
+                    resultString += temp1.GetOperator().ToString();
                 }
                 else if (temp is VariableNode)
                 {

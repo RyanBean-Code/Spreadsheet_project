@@ -23,5 +23,13 @@ namespace SpreadsheetEngine
             : base(op)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultiplicationNode"/> class.
+        /// </summary>
+        public MultiplicationNode()
+        {
+            this.Operator = '*';
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace SpreadsheetEngine
         /// Initializes a new instance of the <see cref="OperatorNode"/> class.
         /// </summary>
         /// <param name="newOperator"> The operator which the node is. </param>
-        public OperatorNode(char newOperator)
+        public OperatorNode(char? newOperator = null)
         {
             this.Operator = newOperator;
             this.Left = this.Right = null;
@@ -28,7 +28,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Gets or sets the operator.
         /// </summary>
-        public char Operator { get; set; }
+        public char? Operator { get; set; }
 
         /// <summary>
         /// Gets or sets the left node.
