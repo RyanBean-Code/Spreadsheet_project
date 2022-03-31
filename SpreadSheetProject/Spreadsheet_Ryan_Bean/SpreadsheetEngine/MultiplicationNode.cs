@@ -19,8 +19,10 @@ namespace SpreadsheetEngine
         /// Initializes a new instance of the <see cref="MultiplicationNode"/> class.
         /// </summary>
         /// <param name="op"> * operator. </param>
-        public MultiplicationNode(char op = '*')
-            : base(op)
+        /// <param name="p"> Presenence. </param>
+        /// <param name="a"> Associativity. </param>
+        public MultiplicationNode(char op = '*', int p = 2, Associativity a = Associativity.Left)
+            : base(op, p, a)
         {
         }
 
@@ -30,6 +32,8 @@ namespace SpreadsheetEngine
         public MultiplicationNode()
         {
             this.Operator = '*';
+            this.Presenence = 2;
+            this.Associativity = Associativity.Left;
         }
     }
 }
