@@ -17,8 +17,6 @@ namespace SpreadsheetEngine
         /// </summary>
         public Cell[,] cells;
 
-        public Dictionary<Cell, List<Cell>> cellValueDictionary;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
         /// </summary>
@@ -26,7 +24,6 @@ namespace SpreadsheetEngine
         /// <param name="numColumns"> Number of Columns in the Spreadsheet. </param>
         public Spreadsheet(int numRows, int numColumns)
         {
-            this.cellValueDictionary = new Dictionary<Cell, List<Cell>>();
             this.cells = new Cell[numColumns, numRows];
             this.InitializeCells(numColumns, numRows);
         }
@@ -214,14 +211,21 @@ namespace SpreadsheetEngine
         /// <param name="cellToUpdate"> The cell thats being updated. </param>
         /// <param name="cellThatChanged"> The cell that that got changed. </param>
         /// <returns> True or False. </returns>
-        private bool CheckIfCellIsStillDependant(Cell cellToUpdate, Cell cellThatChanged)
+        private bool CellIsStillDependant(Cell cellToUpdate, Cell cellThatChanged)
         {
-            ExpressionTree exp = new ExpressionTree(cellToUpdate.Text.Substring(1));
-            List<string> variables = exp.GetVariableNames();
-            string cellThatChangedName = this.GetCellName(cellThatChanged);
-            if (variables.Contains(cellThatChangedName))
+            if (cellToUpdate.Text.StartsWith('='))
             {
-                return true;
+                ExpressionTree exp = new ExpressionTree(cellToUpdate.Text.Substring(1));
+                List<string> variables = exp.GetVariableNames();
+                string cellThatChangedName = this.GetCellName(cellThatChanged);
+                if (variables.Contains(cellThatChangedName))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -232,7 +236,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Event Handler to update cell values when one cell that is dependant on another changes.
         /// </summary>
-        /// <param name="sender"> The cell that just changed </param>
+        /// <param name="sender"> The cell that just changed. </param>
         /// <param name="e"> Should always be equal to "Value". </param>
         private void CellVaribale_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -244,7 +248,7 @@ namespace SpreadsheetEngine
                     List<Cell> cellsToRemove = new List<Cell>();
                     foreach (Cell cell in senderCell.dependantCells)
                     {
-                        if (this.CheckIfCellIsStillDependant(cell, senderCell))
+                        if (this.CellIsStillDependant(cell, senderCell))
                         {
                             this.UpdateCellValue(cell);
                         }

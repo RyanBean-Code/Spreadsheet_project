@@ -4,13 +4,13 @@
 
 namespace Spreadsheet_tests
 {
-    using SpreadsheetEngine;
     using System;
-    using System.Diagnostics;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
     using CptS321;
     using NUnit.Framework;
+    using SpreadsheetEngine;
 
     /// <summary>
     /// Summary.
@@ -100,7 +100,7 @@ namespace Spreadsheet_tests
         /// </summary>
         /// <param name="methodName"> The name of the Private methof to test. </param>
         /// <returns> A MethodInfo type with the information to call the private method. </returns>
-        private MethodInfo GetMethod(string methodName)
+        private MethodInfo? GetMethod(string methodName)
         {
             if (string.IsNullOrWhiteSpace(methodName))
             {
@@ -112,9 +112,12 @@ namespace Spreadsheet_tests
             if (method == null)
             {
                 Assert.Fail("{0} method not found!", methodName);
+                return null;
             }
-
-            return method;
+            else
+            {
+                return method;
+            }
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace Spreadsheet_tests
                 Node temp = testResult.Dequeue();
                 if (temp is OperatorNode)
                 {
-                    OperatorNode temp1 = ((OperatorNode)temp);
+                    OperatorNode temp1 = (OperatorNode)temp;
                     resultString += temp1.Operator.ToString();
                 }
                 else if (temp is VariableNode)

@@ -11,6 +11,9 @@ namespace SpreadsheetEngine
     /// </summary>
     public class Cell : CellBase
     {
+        /// <summary>
+        /// A list of all the cells whose values depend on this cell.
+        /// </summary>
         public List<Cell> dependantCells;
 
         /// <summary>

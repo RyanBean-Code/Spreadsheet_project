@@ -35,6 +35,20 @@ namespace Spreadsheet_tests
         }
 
         /// <summary>
+        /// This tests the logic that cells, will be update when another cell changes.
+        /// </summary>
+        [Test]
+        public void TestCellUpdating()
+        {
+            this.testSpreadsheet.cells[0, 0].Text = "20";
+            this.testSpreadsheet.cells[0, 1].Text = "=A1";
+            Assert.That(this.testSpreadsheet.cells[0, 0].Value, Is.EqualTo(this.testSpreadsheet.cells[0, 1].Value));
+            this.testSpreadsheet.cells[0, 0].Text = "10";
+            Assert.That(this.testSpreadsheet.cells[0, 0].Value, Is.EqualTo(this.testSpreadsheet.cells[0, 1].Value));
+        }
+
+
+        /// <summary>
         /// This test will test the get cell method.
         /// </summary>
         [Test]

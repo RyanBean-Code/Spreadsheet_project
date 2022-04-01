@@ -27,7 +27,7 @@ namespace CptS321
         /// </summary>
         private Dictionary<string, double>? varDictionary;
 
-        private OperatorNodeFactory factory;// = new OperatorNodeFactory();
+        private OperatorNodeFactory factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
