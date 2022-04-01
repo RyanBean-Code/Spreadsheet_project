@@ -4,6 +4,7 @@
 
 namespace Spreadsheet_tests
 {
+    using System;
     using System.Collections.Generic;
     using NUnit.Framework;
     using SpreadsheetEngine;
@@ -32,6 +33,16 @@ namespace Spreadsheet_tests
         [SetUp]
         public void Setup()
         {
+        }
+
+        /// <summary>
+        /// Tests if the expression tree is implemented into the spreadsheet.
+        /// </summary>
+        [Test]
+        public void TestSpreadsheetSupportingExpressionTree()
+        {
+            this.testSpreadsheet.cells[0, 0].Text = "=1+2*3/4";
+            Assert.That(2.5, Is.EqualTo(Convert.ToDouble(this.testSpreadsheet.cells[0, 0].Value)));
         }
 
         /// <summary>
