@@ -12,6 +12,11 @@ namespace SpreadsheetEngine
     public class Cell : CellBase
     {
         /// <summary>
+        /// A list of all the cells whose values depend on this cell.
+        /// </summary>
+        public List<Cell> dependantCells;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
         /// <param name="newColumnIndex"> The Index of the column. </param>
@@ -19,6 +24,7 @@ namespace SpreadsheetEngine
         public Cell(int newColumnIndex, int newRowIndex)
             : base(newColumnIndex, newRowIndex)
         {
+            this.dependantCells = new List<Cell>();
         }
     }
 }

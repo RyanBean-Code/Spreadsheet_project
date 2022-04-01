@@ -4,6 +4,7 @@
 
 namespace Spreadsheet_tests
 {
+    using System;
     using System.Collections.Generic;
     using NUnit.Framework;
     using SpreadsheetEngine;
@@ -33,6 +34,30 @@ namespace Spreadsheet_tests
         public void Setup()
         {
         }
+
+        /// <summary>
+        /// Tests if the expression tree is implemented into the spreadsheet.
+        /// </summary>
+        [Test]
+        public void TestSpreadsheetSupportingExpressionTree()
+        {
+            this.testSpreadsheet.cells[0, 0].Text = "=1+2*3/4";
+            Assert.That(2.5, Is.EqualTo(Convert.ToDouble(this.testSpreadsheet.cells[0, 0].Value)));
+        }
+
+        /// <summary>
+        /// This tests the logic that cells, will be update when another cell changes.
+        /// </summary>
+        [Test]
+        public void TestCellUpdating()
+        {
+            this.testSpreadsheet.cells[0, 0].Text = "20";
+            this.testSpreadsheet.cells[0, 1].Text = "=A1";
+            Assert.That(this.testSpreadsheet.cells[0, 0].Value, Is.EqualTo(this.testSpreadsheet.cells[0, 1].Value));
+            this.testSpreadsheet.cells[0, 0].Text = "10";
+            Assert.That(this.testSpreadsheet.cells[0, 0].Value, Is.EqualTo(this.testSpreadsheet.cells[0, 1].Value));
+        }
+
 
         /// <summary>
         /// This test will test the get cell method.
@@ -82,81 +107,6 @@ namespace Spreadsheet_tests
         }
 
         /// <summary>
-        /// Tests that the tokenized string method.
-        /// </summary>
-        [Test]
-        public void TestCreateTokenizedExpressionList()
-        {
-            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            List<string> testList = new List<string>()
-            {
-                "3",
-                "+",
-                "4",
-            };
-            Assert.That(testList, Is.EqualTo(testTree.CreateTokenizedExpression("3 + 4")));
-            testList.Clear();
-            testList = new () // A1+(b4+5)-79*80
-            {
-                "A1",
-                "+",
-                "(",
-                "b4",
-                "+",
-                "5",
-                ")",
-                "-",
-                "79",
-                "*",
-                "80",
-            };
-            Assert.That(testList, Is.EqualTo(testTree.CreateTokenizedExpression("A1+(b4+5)-79*80")));
-        }
-
-        /// <summary>
-        /// This test the method CreatePostfixExpression() in the ExpressionTree class.
-        /// </summary>
-        [Test]
-        public void TestCreatePostfixExpression()
-        {
-            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            List<string> testListPrefix = new List<string>()
-            {
-                "3",
-                "+",
-                "4",
-            };
-            Queue<Node> testResult = testTree.CreatePostfixExpression(testListPrefix);
-            string resultString = this.ConvertQueueToString(testResult);
-            Assert.That("3 4 +", Is.EqualTo(resultString));
-        }
-
-        /// <summary>
-        /// This test the method CreatePostfixExpression() in the ExpressionTree class.
-        /// </summary>
-        [Test]
-        public void TestCreatePostfixExpression2()
-        {
-            CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
-            string testAns = "3 4 2 1 - * +";
-            List<string> testPrefix = new List<string>() // "3 + 4 * (2 − 1)"
-            {
-                "3",
-                "+",
-                "4",
-                "*",
-                "(",
-                "2",
-                "-",
-                "1",
-                ")",
-            };
-            Queue<Node> testResult = testTree.CreatePostfixExpression(testPrefix);
-            string resultString = this.ConvertQueueToString(testResult);
-            Assert.That(testAns, Is.EqualTo(resultString));
-        }
-
-        /// <summary>
         /// Tests the Evaulate() method in the Expression Tree class.
         /// </summary>
         [Test]
@@ -175,36 +125,6 @@ namespace Spreadsheet_tests
         {
             CptS321.ExpressionTree testTree = new CptS321.ExpressionTree();
             Assert.That(0, Is.EqualTo(testTree.Evaluate()));
-        }
-
-        /// <summary>
-        /// Just used in some tests to convert a queue object into a string .
-        /// </summary>
-        /// <param name="testResult"> The Queue to be converted into a string. </param>
-        /// <returns> A String. </returns>
-        private string ConvertQueueToString(Queue<Node> testResult)
-        {
-            string resultString = string.Empty;
-            while (testResult.Count > 0)
-            {
-                Node temp = testResult.Dequeue();
-                if (temp is OperatorNode)
-                {
-                    resultString += ((OperatorNode)temp).Operator.ToString();
-                }
-                else if (temp is VariableNode)
-                {
-                    resultString += ((VariableNode)temp).Name;
-                }
-                else if (temp is ConstantNode)
-                {
-                    resultString += ((ConstantNode)temp).Value.ToString();
-                }
-
-                resultString += " ";
-            }
-
-            return resultString.Trim();
         }
     }
 }

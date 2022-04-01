@@ -19,9 +19,21 @@ namespace SpreadsheetEngine
         /// Initializes a new instance of the <see cref="AdditionNode"/> class.
         /// </summary>
         /// <param name="op"> + operator. </param>
-        public AdditionNode(char op = '+')
-            : base(op)
+        /// <param name="p"> Presenence. </param>
+        /// <param name="a"> Associativity. </param>
+        public AdditionNode(char op = '+', int p = 1, Associativity a = Associativity.Left)
+            : base(op, p, a)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdditionNode"/> class.
+        /// </summary>
+        public AdditionNode()
+        {
+            this.Operator = '+';
+            this.Presenence = 1;
+            this.Associativity = Associativity.Left;
         }
     }
 }

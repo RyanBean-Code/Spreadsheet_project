@@ -19,16 +19,30 @@ namespace SpreadsheetEngine
         /// Initializes a new instance of the <see cref="OperatorNode"/> class.
         /// </summary>
         /// <param name="newOperator"> The operator which the node is. </param>
-        public OperatorNode(char newOperator)
+        /// /// <param name="newPresenence"> Presenence. </param>
+        /// <param name="newAssociativity"> Associativity. </param>
+        public OperatorNode(char? newOperator = null, int? newPresenence = null, Associativity newAssociativity = Associativity.Left)
         {
             this.Operator = newOperator;
+            this.Presenence = newPresenence;
+            this.Associativity = newAssociativity;
             this.Left = this.Right = null;
         }
 
         /// <summary>
         /// Gets or sets the operator.
         /// </summary>
-        public char Operator { get; set; }
+        public char? Operator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the presenence of the operator.
+        /// </summary>
+        public int? Presenence { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associativity of the operator.
+        /// </summary>
+        public Associativity Associativity { get; set; }
 
         /// <summary>
         /// Gets or sets the left node.
@@ -41,3 +55,4 @@ namespace SpreadsheetEngine
         public Node? Right { get; set; }
     }
 }
+    

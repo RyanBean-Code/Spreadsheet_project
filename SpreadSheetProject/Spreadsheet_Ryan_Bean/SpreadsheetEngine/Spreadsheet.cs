@@ -5,6 +5,7 @@ namespace SpreadsheetEngine
 {
     using System;
     using System.ComponentModel;
+    using CptS321;
 
     /// <summary>
     /// Class for implementations with the Spreadsheet.
@@ -82,6 +83,18 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// Sets the Value for a cell.
+        /// Is used in the form class in the CellBeginEdit event.
+        /// </summary>
+        /// <param name="cIndex"> Column index of the cell. </param>
+        /// <param name="rIndex"> Row index of the cell. </param>
+        /// <param name="value"> New value of the cell. </param>
+        public void SetCellValue(int cIndex, int rIndex, string value)
+        {
+            this.GetCell(cIndex, rIndex).Value = value;
+        }
+
+        /// <summary>
         /// Initializes all the cells in the spreadsheet.
         /// </summary>
         private void InitializeCells(int numColumns, int numRows)
@@ -108,13 +121,9 @@ namespace SpreadsheetEngine
             {
                 if (e.PropertyName == "Text")
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     if (senderCell.Text.StartsWith('='))
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                     {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                        senderCell.Value = this.GetCellAtStringCoordinate(senderCell.Text.Substring(1)).Value;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        this.SetCellValue(senderCell);
                     }
                     else
                     {
@@ -124,6 +133,152 @@ namespace SpreadsheetEngine
 
                 this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
             }
+        }
+
+        /// <summary>
+        /// Used to set the value of a cell when the text starts with '=' character.
+        /// </summary>
+        /// <param name="cell"> The Cell value to set. </param>
+        private void SetCellValue(Cell cell)
+        {
+            bool isValid = true;
+            ExpressionTree exp = new ExpressionTree(cell.Text.Substring(1));
+            List<string> varibles = exp.GetVariableNames();
+            foreach (string varName in varibles)
+            {
+                Cell cellVaribale = this.GetCellAtStringCoordinate(varName);
+                double varValue;
+                if (!string.IsNullOrEmpty(cellVaribale.Value) && double.TryParse(cellVaribale.Value, out varValue))
+                {
+                    exp.SetVariable(varName, varValue);
+                }
+                else
+                {
+                    isValid = false;
+                }
+
+                cellVaribale.dependantCells.Add(cell);
+                cellVaribale.PropertyChanged -= this.CellVaribale_PropertyChanged;
+                cellVaribale.PropertyChanged += this.CellVaribale_PropertyChanged;
+            }
+
+            if (isValid)
+            {
+                cell.Value = Convert.ToString(exp.Evaluate());
+            }
+            else
+            {
+                cell.Value = cell.Text;
+            }
+        }
+
+        /// <summary>
+        /// Used to update a cells value when one on the variables in the cells expression changes.
+        /// </summary>
+        /// <param name="cell"> The cell to update. </param>
+        private void UpdateCellValue(Cell cell)
+        {
+            bool isValid = true;
+            ExpressionTree exp = new ExpressionTree(cell.Text.Substring(1));
+            List<string> variables = exp.GetVariableNames();
+            foreach (string varName in variables)
+            {
+                Cell cellVariable = this.GetCellAtStringCoordinate(varName);
+                double varValue;
+                if (double.TryParse(cellVariable.Value, out varValue))
+                {
+                    exp.SetVariable(varName, varValue);
+                }
+                else
+                {
+                    isValid = false;
+                }
+            }
+
+            if (isValid)
+            {
+                cell.Value = Convert.ToString(exp.Evaluate());
+            }
+            else
+            {
+                cell.Value = cell.Text;
+            }
+        }
+
+        /// <summary>
+        /// Used to check whether of not a cell is still dependant on the value of another.
+        /// </summary>
+        /// <param name="cellToUpdate"> The cell thats being updated. </param>
+        /// <param name="cellThatChanged"> The cell that that got changed. </param>
+        /// <returns> True or False. </returns>
+        private bool CellIsStillDependant(Cell cellToUpdate, Cell cellThatChanged)
+        {
+            if (cellToUpdate.Text.StartsWith('='))
+            {
+                ExpressionTree exp = new ExpressionTree(cellToUpdate.Text.Substring(1));
+                List<string> variables = exp.GetVariableNames();
+                string cellThatChangedName = this.GetCellName(cellThatChanged);
+                if (variables.Contains(cellThatChangedName))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Event Handler to update cell values when one cell that is dependant on another changes.
+        /// </summary>
+        /// <param name="sender"> The cell that just changed. </param>
+        /// <param name="e"> Should always be equal to "Value". </param>
+        private void CellVaribale_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            Cell senderCell = (Cell)sender;
+            if (senderCell != null)
+            {
+                if (e.PropertyName == "Value")
+                {
+                    List<Cell> cellsToRemove = new List<Cell>();
+                    foreach (Cell cell in senderCell.dependantCells)
+                    {
+                        if (this.CellIsStillDependant(cell, senderCell))
+                        {
+                            this.UpdateCellValue(cell);
+                        }
+                        else
+                        {
+                            cellsToRemove.Add(cell);
+                        }
+                    }
+
+                    foreach (Cell cell in cellsToRemove)
+                    {
+                        senderCell.dependantCells.Remove(cell);
+                    }
+
+                    if (senderCell.dependantCells.Count == 0)
+                    {
+                        senderCell.PropertyChanged -= this.CellVaribale_PropertyChanged;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the cell ex "A1" or "F20".
+        /// </summary>
+        /// <param name="cell"> The cell to get the Name of. </param>
+        /// <returns> The name of the cell in string form. </returns>
+        private string GetCellName(Cell cell)
+        {
+            return Convert.ToString(Convert.ToChar(cell.ColumnIndex + 65)) + Convert.ToString(cell.RowIndex + 1);
         }
     }
 }
