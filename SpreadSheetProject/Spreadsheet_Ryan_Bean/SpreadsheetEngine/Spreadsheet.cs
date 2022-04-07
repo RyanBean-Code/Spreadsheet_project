@@ -17,6 +17,10 @@ namespace SpreadsheetEngine
         /// </summary>
         public Cell[,] cells;
 
+        private Stack<UndoRedoCollection> undos;
+
+        private Stack<UndoRedoCollection> redos;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
         /// </summary>
@@ -26,6 +30,8 @@ namespace SpreadsheetEngine
         {
             this.cells = new Cell[numColumns, numRows];
             this.InitializeCells(numColumns, numRows);
+            this.undos = new Stack<UndoRedoCollection>();
+            this.redos = new Stack<UndoRedoCollection>();
         }
 
         /// <summary>
