@@ -134,8 +134,6 @@ namespace SpreadsheetEngine
                 }
                 else if (e.PropertyName == "BGColor")
                 {
-
-
                     this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("BGColor"));
                 }
             }

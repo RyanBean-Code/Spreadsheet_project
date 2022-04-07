@@ -23,6 +23,12 @@ namespace SpreadsheetEngine
         protected string? value;
 
         /// <summary>
+        /// Represents the color of the cell, I was hoping to do this with just the property but I kept getting
+        /// Stackoverflow exceptions.
+        /// </summary>
+        protected uint color;
+
+        /// <summary>
         /// The index of the Row the cell is.
         /// </summary>
         private int rowIndex;
@@ -44,7 +50,7 @@ namespace SpreadsheetEngine
             this.rowIndex = newRowIndex;
             this.columnIndex = newColumnIndex;
             this.text = this.value = string.Empty;
-            this.BGColor = 0xFFFFFFFF;
+            this.color = 0xffffffff;
         }
 
         /// <summary>
@@ -59,12 +65,12 @@ namespace SpreadsheetEngine
         {
             get
             {
-                return this.BGColor;
+                return this.color;
             }
 
             set
             {
-                this.BGColor = value;
+                this.color = value;
                 this.PropertyChanged(this, new PropertyChangedEventArgs("BGColor"));
             }
         }

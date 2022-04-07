@@ -40,7 +40,7 @@ namespace Spreadsheet_Ryan_Bean
             this.spreadsheet.CellPropertyChanged += this.ACellPropertyHasChanged;
             this.dataGridView1.CellEndEdit += this.DataGridView1_CellEndEdit;
             this.dataGridView1.CellBeginEdit += this.DataGridView1_CellBeginEdit;
-            this.changeBackgroundColorToolStripMenuItem.Click += ChangeBackgroundColorToolStripMenuItem_Click;
+            this.changeBackgroundColorToolStripMenuItem.Click += this.ChangeBackgroundColorToolStripMenuItem_Click;
         }
 
         private void ChangeBackgroundColorToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -53,6 +53,7 @@ namespace Spreadsheet_Ryan_Bean
                 {
                     int row = this.dataGridView1.SelectedCells[i].RowIndex;
                     int col = this.dataGridView1.SelectedCells[i].ColumnIndex;
+                    this.spreadsheet.GetCell(col, row).BGColor = (uint)colorDialog.Color.ToArgb();
                 }
             }
 
@@ -117,7 +118,7 @@ namespace Spreadsheet_Ryan_Bean
             }
             else if ((Cell)sender != null && e.PropertyName == "BGColor")
             {
-
+                this.dataGridView1.Rows[((Cell)sender).RowIndex].Cells[((Cell)sender).ColumnIndex].Style.BackColor = Color.FromArgb((int)((Cell)sender).BGColor);
             }
         }
     }
