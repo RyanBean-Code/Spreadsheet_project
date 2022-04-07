@@ -56,6 +56,27 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// This method adds an undo the the undos member.
+        /// </summary>
+        /// <param name="methodName"> Name of the method to call. </param>
+        /// <param name="methodOwner"> Owner of the method. </param>
+        /// <param name="paramaters"> Parameters for the method. </param>
+        /// <param name="undoName"> name of the undo example "Text Change". </param>
+        public void AddUndo(string methodName, object methodOwner, List<object> paramaters, string undoName)
+        {
+            this.undos.Push(new UndoRedoCollection(methodName, methodOwner, paramaters, undoName));
+        }
+
+        /// <summary>
+        /// Does the undo.
+        /// </summary>
+        public void Undo()
+        {
+            UndoRedoCollection undo = this.undos.Pop();
+            undo.PerformUndoRedo();
+        }
+
+        /// <summary>
         /// Returns the cell at the given indices.
         /// </summary>
         /// <param name="cIndex"> Column Index. </param>

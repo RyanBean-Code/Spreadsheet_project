@@ -15,7 +15,7 @@ namespace SpreadsheetEngine
     /// <summary>
     /// Class which represents an undo or redo action.
     /// </summary>
-    internal class UndoRedoCollection
+    public class UndoRedoCollection
     {
         /// <summary>
         /// Represents the method name needed to make a undo or redo action.
@@ -38,6 +38,7 @@ namespace SpreadsheetEngine
         /// <param name="newMethodName"> The name of the method. </param>
         /// <param name="newOwner"> The owner of the method. </param>
         /// <param name="newParameters"> The parameters for the method. </param>
+        /// <param name="newUndoRedoName"> The name of the action. </param>
         public UndoRedoCollection(string newMethodName, object newOwner, List<object> newParameters, string? newUndoRedoName = null)
         {
             this.methodName = newMethodName;
@@ -49,7 +50,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Gets or sets the undoRedoName
         /// </summary>
-        public string? UndoRedoName { get; set; };
+        public string? UndoRedoName { get; set; }
 
         /// <summary>
         /// Calls the method which will either undo or redo the action.

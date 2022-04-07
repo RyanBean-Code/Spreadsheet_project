@@ -36,6 +36,18 @@ namespace Spreadsheet_tests
         }
 
         /// <summary>
+        /// Tests if the undo feature works in the spreadsheet for text.
+        /// </summary>
+        [Test]
+        public void TestTextUndo()
+        {
+            this.testSpreadsheet.cells[0, 0].Text = "hello";
+            this.testSpreadsheet.cells[0, 0].Text = "world";
+            this.testSpreadsheet.Undo();
+            Assert.That("hello", Is.EqualTo(this.testSpreadsheet.cells[0, 0].Text));
+        }
+
+        /// <summary>
         /// Tests if the expression tree is implemented into the spreadsheet.
         /// </summary>
         [Test]
