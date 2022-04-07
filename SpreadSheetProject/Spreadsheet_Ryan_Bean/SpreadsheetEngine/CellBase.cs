@@ -35,7 +35,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="CellBase"/> class.
         /// Constuctor for the Cell class.
-        /// Sets teh row and column index of the cell.
+        /// Sets the row and column index of the cell.
         /// </summary>
         /// <param name="newRowIndex"> Value for the row index. </param>
         /// <param name="newColumnIndex"> Value for the Column index. </param>
@@ -44,12 +44,30 @@ namespace SpreadsheetEngine
             this.rowIndex = newRowIndex;
             this.columnIndex = newColumnIndex;
             this.text = this.value = string.Empty;
+            this.BGColor = 0xFFFFFFFF;
         }
 
         /// <summary>
         /// The event that is triggered when new text is added in the textbox.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged = delegate { };
+
+        /// <summary>
+        /// Gets or sets the background color of the cell.
+        /// </summary>
+        public uint BGColor
+        {
+            get
+            {
+                return this.BGColor;
+            }
+
+            set
+            {
+                this.BGColor = value;
+                this.PropertyChanged(this, new PropertyChangedEventArgs("BGColor"));
+            }
+        }
 
         /// <summary>
         /// Gets or sets the text is the textbox.

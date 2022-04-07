@@ -40,6 +40,22 @@ namespace Spreadsheet_Ryan_Bean
             this.spreadsheet.CellPropertyChanged += this.ACellPropertyHasChanged;
             this.dataGridView1.CellEndEdit += this.DataGridView1_CellEndEdit;
             this.dataGridView1.CellBeginEdit += this.DataGridView1_CellBeginEdit;
+            this.changeBackgroundColorToolStripMenuItem.Click += ChangeBackgroundColorToolStripMenuItem_Click;
+        }
+
+        private void ChangeBackgroundColorToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = false;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                for (int i = 0; i < this.dataGridView1.SelectedCells.Count; i++)
+                {
+                    int row = this.dataGridView1.SelectedCells[i].RowIndex;
+                    int col = this.dataGridView1.SelectedCells[i].ColumnIndex;
+                }
+            }
+
         }
 
         /// <summary>
@@ -98,6 +114,10 @@ namespace Spreadsheet_Ryan_Bean
             if (((SpreadsheetEngine.Cell)sender) != null && e.PropertyName == "Value")
             {
                 this.dataGridView1.Rows[((SpreadsheetEngine.Cell)sender).RowIndex].Cells[((SpreadsheetEngine.Cell)sender).ColumnIndex].Value = ((SpreadsheetEngine.Cell)sender).Value;
+            }
+            else if ((Cell)sender != null && e.PropertyName == "BGColor")
+            {
+
             }
         }
     }

@@ -129,9 +129,15 @@ namespace SpreadsheetEngine
                     {
                         senderCell.Value = senderCell.Text;
                     }
-                }
 
-                this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
+                    this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
+                }
+                else if (e.PropertyName == "BGColor")
+                {
+
+
+                    this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("BGColor"));
+                }
             }
         }
 
