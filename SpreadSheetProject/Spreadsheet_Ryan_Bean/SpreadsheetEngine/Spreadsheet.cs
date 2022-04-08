@@ -62,7 +62,7 @@ namespace SpreadsheetEngine
         /// <param name="methodOwner"> Owner of the method. </param>
         /// <param name="paramaters"> Parameters for the method. </param>
         /// <param name="undoName"> name of the undo example "Text Change". </param>
-        public void AddUndo(string methodName, object methodOwner, List<object> paramaters, string undoName)
+        public void AddUndo(string methodName, object methodOwner, object[] paramaters, string undoName)
         {
             this.undos.Push(new UndoRedoCollection(methodName, methodOwner, paramaters, undoName));
         }
@@ -72,8 +72,11 @@ namespace SpreadsheetEngine
         /// </summary>
         public void Undo()
         {
-            UndoRedoCollection undo = this.undos.Pop();
-            undo.PerformUndoRedo();
+            if (this.undos.Count > 0)
+            {
+                UndoRedoCollection undo = this.undos.Pop();
+                undo.PerformUndoRedo();
+            }
         }
 
         /// <summary>
@@ -116,9 +119,9 @@ namespace SpreadsheetEngine
         /// <param name="cIndex"> Column index of the cell. </param>
         /// <param name="rIndex"> Row index of the cell. </param>
         /// <param name="value"> New value of the cell. </param>
-        public void SetCellValue(int cIndex, int rIndex, string value)
+        public void SetCellText(int cIndex, int rIndex, string value)
         {
-            this.GetCell(cIndex, rIndex).Value = value;
+            this.GetCell(cIndex, rIndex).Text = value;
         }
 
         /// <summary>
@@ -156,7 +159,11 @@ namespace SpreadsheetEngine
                     {
                         senderCell.Value = senderCell.Text;
                     }
+                }
 
+                // This is needed to keep updating the value of the cells if another one changes.
+                else if (e.PropertyName == "Value")
+                {
                     this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Value"));
                 }
                 else if (e.PropertyName == "BGColor")

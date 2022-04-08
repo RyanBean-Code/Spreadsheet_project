@@ -41,6 +41,12 @@ namespace Spreadsheet_Ryan_Bean
             this.dataGridView1.CellEndEdit += this.DataGridView1_CellEndEdit;
             this.dataGridView1.CellBeginEdit += this.DataGridView1_CellBeginEdit;
             this.changeBackgroundColorToolStripMenuItem.Click += this.ChangeBackgroundColorToolStripMenuItem_Click;
+            this.undoToolStripMenuItem.Click += UndoToolStripMenuItem_Click;
+        }
+
+        private void UndoToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            this.spreadsheet.Undo();
         }
 
         private void ChangeBackgroundColorToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -68,17 +74,22 @@ namespace Spreadsheet_Ryan_Bean
         {
             int row = e.RowIndex;
             int col = e.ColumnIndex;
-            string cellText = string.Empty;
-            try
-            {
-                cellText = (string)this.dataGridView1.CurrentCell.Value;
-            }
-            catch
+            string cellText = (string)this.dataGridView1.CurrentCell.Value;
+            if (cellText == null)
             {
                 cellText = string.Empty;
             }
 
-            this.spreadsheet.SetCellValue(col, row, cellText);
+            object[] param =
+                    {
+                        row,
+                        col,
+                        cellText,
+                    };
+
+            this.spreadsheet.AddUndo("SetCellText", this.spreadsheet, param, "Text Change");
+
+            this.spreadsheet.SetCellText(col, row, cellText);
         }
 
         /// <summary>

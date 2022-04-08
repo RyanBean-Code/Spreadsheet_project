@@ -92,9 +92,7 @@ namespace SpreadsheetEngine
                 if (this.text != value)
                 {
                     this.text = value;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
         }
@@ -114,9 +112,7 @@ namespace SpreadsheetEngine
                 if (value != this.value)
                 {
                     this.value = value;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
         }

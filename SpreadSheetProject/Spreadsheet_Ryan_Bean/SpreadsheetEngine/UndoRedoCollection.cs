@@ -30,7 +30,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Represents the list of parameters in the method call.
         /// </summary>
-        private List<object> parameters;
+        private object[] parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UndoRedoCollection"/> class.
@@ -39,7 +39,7 @@ namespace SpreadsheetEngine
         /// <param name="newOwner"> The owner of the method. </param>
         /// <param name="newParameters"> The parameters for the method. </param>
         /// <param name="newUndoRedoName"> The name of the action. </param>
-        public UndoRedoCollection(string newMethodName, object newOwner, List<object> newParameters, string? newUndoRedoName = null)
+        public UndoRedoCollection(string newMethodName, object newOwner, object[] newParameters, string? newUndoRedoName = null)
         {
             this.methodName = newMethodName;
             this.owner = newOwner;
