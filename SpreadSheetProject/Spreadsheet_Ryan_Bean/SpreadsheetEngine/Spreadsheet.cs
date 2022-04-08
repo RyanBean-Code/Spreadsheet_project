@@ -75,7 +75,31 @@ namespace SpreadsheetEngine
             if (this.undos.Count > 0)
             {
                 UndoRedoCollection undo = this.undos.Pop();
+                object[] parameters = undo.Parameters;
+                if (undo.UndoRedoName == "Text Change")
+                {
+                    parameters[2] = this.GetCell((int)parameters[0], (int)parameters[1]).Text;
+                }
+                else if (undo.UndoRedoName == "Cell Color Change")
+                {
+                    parameters[2] = this.GetCell((int)parameters[0], (int)parameters[1]).BGColor;
+                }
+
+                this.redos.Push(new UndoRedoCollection(undo.MethodName, undo.Owner, parameters, undo.UndoRedoName));
                 undo.PerformUndoRedo();
+            }
+        }
+
+        /// <summary>
+        /// Does a redo.
+        /// </summary>
+        public void Redo()
+        {
+            if (this.redos.Count > 0)
+            {
+                UndoRedoCollection redo = this.redos.Pop();
+                this.undos.Push(redo);
+                redo.PerformUndoRedo();
             }
         }
 
@@ -122,6 +146,17 @@ namespace SpreadsheetEngine
         public void SetCellText(int cIndex, int rIndex, string value)
         {
             this.GetCell(cIndex, rIndex).Text = value;
+        }
+
+        /// <summary>
+        /// Sets the value of the background color inn the cell.
+        /// </summary>
+        /// <param name="cIndex"> Index of the column. </param>
+        /// <param name="rIndex"> Index of the Row. </param>
+        /// <param name="color"> A unint value of the color. </param>
+        public void SetCellBackGroundColor(int cIndex, int rIndex, uint color)
+        {
+            this.cells[cIndex, rIndex].BGColor = color;
         }
 
         /// <summary>

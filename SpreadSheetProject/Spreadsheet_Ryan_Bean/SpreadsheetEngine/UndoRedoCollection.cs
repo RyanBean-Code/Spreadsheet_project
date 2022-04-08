@@ -15,7 +15,7 @@ namespace SpreadsheetEngine
     /// <summary>
     /// Class which represents an undo or redo action.
     /// </summary>
-    public class UndoRedoCollection
+    internal class UndoRedoCollection
     {
         /// <summary>
         /// Represents the method name needed to make a undo or redo action.
@@ -53,12 +53,45 @@ namespace SpreadsheetEngine
         public string? UndoRedoName { get; set; }
 
         /// <summary>
+        /// Gets the array of parameters for the action.
+        /// </summary>
+        public object[] Parameters
+        {
+            get
+            {
+                return this.parameters;
+            }
+        }
+
+        /// <summary>
+        /// Gets the owner of the method.
+        /// </summary>
+        public object Owner
+        {
+            get
+            {
+                return this.owner;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the method that is called.
+        /// </summary>
+        public string MethodName
+        {
+            get
+            {
+                return this.methodName;
+            }
+        }
+
+        /// <summary>
         /// Calls the method which will either undo or redo the action.
         /// </summary>
         public void PerformUndoRedo()
         {
-            MethodInfo method = this.owner.GetType().GetMethod(this.methodName, BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-            method.Invoke(this.owner, new object[] { this.parameters });
+            MethodInfo method = this.owner.GetType().GetMethod(this.methodName);
+            method.Invoke(this.owner, this.parameters);
         }
     }
 }
