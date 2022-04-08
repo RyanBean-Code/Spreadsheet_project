@@ -39,12 +39,14 @@ namespace Spreadsheet_tests
         /// Tests if the undo feature works in the spreadsheet for text.
         /// </summary>
         [Test]
-        public void TestTextUndo()
+        public void TestTextUndoRedo()
         {
-            this.testSpreadsheet.cells[0, 0].Text = "hello";
-            this.testSpreadsheet.cells[0, 0].Text = "world";
+            this.testSpreadsheet.SetCellText(0, 0, "hello");
+            this.testSpreadsheet.SetCellText(0, 0, "world");
             this.testSpreadsheet.Undo();
             Assert.That("hello", Is.EqualTo(this.testSpreadsheet.cells[0, 0].Text));
+            this.testSpreadsheet.Redo();
+            Assert.That("world", Is.EqualTo(this.testSpreadsheet.cells[0, 0].Text));
         }
 
         /// <summary>

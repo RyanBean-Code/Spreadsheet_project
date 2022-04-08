@@ -75,17 +75,19 @@ namespace SpreadsheetEngine
             if (this.undos.Count > 0)
             {
                 UndoRedoCollection undo = this.undos.Pop();
-                object[] parameters = undo.Parameters;
-                if (undo.UndoRedoName == "Text Change")
-                {
-                    parameters[2] = this.GetCell((int)parameters[0], (int)parameters[1]).Text;
-                }
-                else if (undo.UndoRedoName == "Cell Color Change")
-                {
-                    parameters[2] = this.GetCell((int)parameters[0], (int)parameters[1]).BGColor;
-                }
+                //object[] redoParameters = new object[3];
+                //redoParameters[0] = undo.Parameters[0];
+                //redoParameters[1] = undo.Parameters[1];
+                //if (undo.UndoRedoName == "Text Change")
+                //{
+                //    redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).Text;
+                //}
+                //else if (undo.UndoRedoName == "Cell Color Change")
+                //{
+                //    redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).BGColor;
+                //}
 
-                this.redos.Push(new UndoRedoCollection(undo.MethodName, undo.Owner, parameters, undo.UndoRedoName));
+                this.redos.Push(new UndoRedoCollection(undo.MethodName, undo.Owner, this.CreateNewUndoRedoParameters(undo), undo.UndoRedoName));
                 undo.PerformUndoRedo();
             }
         }
@@ -98,9 +100,46 @@ namespace SpreadsheetEngine
             if (this.redos.Count > 0)
             {
                 UndoRedoCollection redo = this.redos.Pop();
-                this.undos.Push(redo);
+                //this.undos.Push(redo);
+                this.undos.Push(new UndoRedoCollection(redo.MethodName, redo.Owner, this.CreateNewUndoRedoParameters(redo), redo.UndoRedoName));
                 redo.PerformUndoRedo();
             }
+        }
+
+        /// <summary>
+        /// Check if you can perform an undo action.
+        /// </summary>
+        /// <returns> True if the undo stack isn't empty. </returns>
+        public bool UndosAvailable()
+        {
+            return this.undos.Count > 0;
+        }
+
+        /// <summary>
+        /// Check if you can perform a redo action.
+        /// </summary>
+        /// <returns> True is the redo stack isn't empty. </returns>
+        public bool RedosAvailable()
+        {
+            return this.redos.Count > 0;
+        }
+
+        /// <summary>
+        /// Gets the type of the undo the user can perform.
+        /// </summary>
+        /// <returns> The UndoRedoName Property of the undo on top of the stack. </returns>
+        public string? GetTypeUndo()
+        {
+            return this.undos.Peek().UndoRedoName;
+        }
+
+        /// <summary>
+        /// Gets the type of the redo the user can perform.
+        /// </summary>
+        /// <returns> The UndoRedoName property of the redo on top of the stack. </returns>
+        public string? GetTypeRedo()
+        {
+            return this.redos.Peek().UndoRedoName;
         }
 
         /// <summary>
@@ -157,6 +196,23 @@ namespace SpreadsheetEngine
         public void SetCellBackGroundColor(int cIndex, int rIndex, uint color)
         {
             this.cells[cIndex, rIndex].BGColor = color;
+        }
+
+        private object[] CreateNewUndoRedoParameters(UndoRedoCollection prevUndoRedo)
+        {
+            object[] redoParameters = new object[3];
+            redoParameters[0] = prevUndoRedo.Parameters[0];
+            redoParameters[1] = prevUndoRedo.Parameters[1];
+            if (prevUndoRedo.UndoRedoName == "Text Change")
+            {
+                redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).Text;
+            }
+            else if (prevUndoRedo.UndoRedoName == "Cell Color Change")
+            {
+                redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).BGColor;
+            }
+
+            return redoParameters;
         }
 
         /// <summary>

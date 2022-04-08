@@ -42,11 +42,21 @@ namespace Spreadsheet_Ryan_Bean
             this.dataGridView1.CellBeginEdit += this.DataGridView1_CellBeginEdit;
             this.changeBackgroundColorToolStripMenuItem.Click += this.ChangeBackgroundColorToolStripMenuItem_Click;
             this.undoToolStripMenuItem.Click += this.UndoToolStripMenuItem_Click;
+            this.redoToolStripMenuItem.Click += this.RedoToolStripMenuItem_Click;
+            this.undoToolStripMenuItem.Enabled = false;
+            this.redoToolStripMenuItem.Enabled = false;
+        }
+
+        private void RedoToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            this.spreadsheet.Redo();
+            this.UpdateUndoRedoButtons();
         }
 
         private void UndoToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             this.spreadsheet.Undo();
+            this.UpdateUndoRedoButtons();
         }
 
         private void ChangeBackgroundColorToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -137,6 +147,33 @@ namespace Spreadsheet_Ryan_Bean
             else if ((Cell)sender != null && e.PropertyName == "BGColor")
             {
                 this.dataGridView1.Rows[((Cell)sender).RowIndex].Cells[((Cell)sender).ColumnIndex].Style.BackColor = Color.FromArgb((int)((Cell)sender).BGColor);
+            }
+
+            this.UpdateUndoRedoButtons();
+        }
+
+        private void UpdateUndoRedoButtons()
+        {
+            if (this.spreadsheet.UndosAvailable())
+            {
+                this.undoToolStripMenuItem.Enabled = true;
+                this.undoToolStripMenuItem.Text = "Undo " + this.spreadsheet.GetTypeUndo();
+            }
+            else
+            {
+                this.undoToolStripMenuItem.Enabled = false;
+                this.undoToolStripMenuItem.Text = "Undo";
+            }
+
+            if (this.spreadsheet.RedosAvailable())
+            {
+                this.redoToolStripMenuItem.Enabled = true;
+                this.redoToolStripMenuItem.Text = "Redo " + this.spreadsheet.GetTypeRedo();
+            }
+            else
+            {
+                this.redoToolStripMenuItem.Enabled = false;
+                this.redoToolStripMenuItem.Text = "Redo";
             }
         }
     }
