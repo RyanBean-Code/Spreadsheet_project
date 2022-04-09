@@ -65,6 +65,11 @@ namespace Spreadsheet_Ryan_Bean
             colorDialog.AllowFullOpen = false;
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
+                // object[] undoParameters = new object[2];
+                // undoParameters[0] = this.dataGridView1.SelectedCells;
+                // undoParameters[0] = (uint)this.dataGridView1.SelectedCells[0].Style.BackColor.ToArgb();
+                // this.spreadsheet.AddUndo("SetCellsBackGroundColors", this, undoParameters, "Cell Color Change");
+                // this.SetCellsBackGroundColors(this.dataGridView1.SelectedCells, (uint)colorDialog.Color.ToArgb());
                 for (int i = 0; i < this.dataGridView1.SelectedCells.Count; i++)
                 {
                     int row = this.dataGridView1.SelectedCells[i].RowIndex;
@@ -79,6 +84,21 @@ namespace Spreadsheet_Ryan_Bean
                     this.spreadsheet.AddUndo("SetCellBackGroundColor", this.spreadsheet, param, "Cell Color Change");
                     this.spreadsheet.SetCellBackGroundColor(col, row, (uint)colorDialog.Color.ToArgb());
                 }
+            }
+        }
+
+        /// <summary>
+        /// Sets the background color of a collection of cells.
+        /// </summary>
+        /// <param name="cells"> The cells to change the color of. </param>
+        /// <param name="color"> The color to change the cells to. </param>
+        private void SetCellsBackGroundColors(DataGridViewSelectedCellCollection cells, uint color)
+        {
+            for (int i = 0; i < cells.Count; i++)
+            {
+                int row = cells[i].RowIndex;
+                int col = cells[i].ColumnIndex;
+                this.spreadsheet.SetCellBackGroundColor(col, row, color);
             }
         }
 

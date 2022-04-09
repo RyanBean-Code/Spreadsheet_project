@@ -90,7 +90,7 @@ namespace SpreadsheetEngine
         /// </summary>
         public void PerformUndoRedo()
         {
-            MethodInfo method = this.owner.GetType().GetMethod(this.methodName);
+            MethodInfo method = this.owner.GetType().GetMethod(this.methodName);//, BindingFlags.Public | BindingFlags.NonPublic);
             method.Invoke(this.owner, this.parameters);
         }
     }
