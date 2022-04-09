@@ -72,7 +72,6 @@ namespace Spreadsheet_tests
             Assert.That(this.testSpreadsheet.cells[0, 0].Value, Is.EqualTo(this.testSpreadsheet.cells[0, 1].Value));
         }
 
-
         /// <summary>
         /// This test will test the get cell method.
         /// </summary>

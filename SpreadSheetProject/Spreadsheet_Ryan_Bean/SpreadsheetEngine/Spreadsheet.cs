@@ -75,18 +75,18 @@ namespace SpreadsheetEngine
             if (this.undos.Count > 0)
             {
                 UndoRedoCollection undo = this.undos.Pop();
-                //object[] redoParameters = new object[3];
-                //redoParameters[0] = undo.Parameters[0];
-                //redoParameters[1] = undo.Parameters[1];
-                //if (undo.UndoRedoName == "Text Change")
-                //{
-                //    redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).Text;
-                //}
-                //else if (undo.UndoRedoName == "Cell Color Change")
-                //{
-                //    redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).BGColor;
-                //}
 
+                // object[] redoParameters = new object[3];
+                // redoParameters[0] = undo.Parameters[0];
+                // redoParameters[1] = undo.Parameters[1];
+                // if (undo.UndoRedoName == "Text Change")
+                // {
+                //     redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).Text;
+                // }
+                // else if (undo.UndoRedoName == "Cell Color Change")
+                // {
+                //     redoParameters[2] = this.GetCell((int)redoParameters[0], (int)redoParameters[1]).BGColor;
+                // }
                 this.redos.Push(new UndoRedoCollection(undo.MethodName, undo.Owner, this.CreateNewUndoRedoParameters(undo), undo.UndoRedoName));
                 undo.PerformUndoRedo();
             }
@@ -100,7 +100,8 @@ namespace SpreadsheetEngine
             if (this.redos.Count > 0)
             {
                 UndoRedoCollection redo = this.redos.Pop();
-                //this.undos.Push(redo);
+
+                // this.undos.Push(redo);
                 this.undos.Push(new UndoRedoCollection(redo.MethodName, redo.Owner, this.CreateNewUndoRedoParameters(redo), redo.UndoRedoName));
                 redo.PerformUndoRedo();
             }
