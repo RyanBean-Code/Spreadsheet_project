@@ -5,6 +5,7 @@ namespace SpreadsheetEngine
 {
     using System;
     using System.ComponentModel;
+    using System.Xml;
     using CptS321;
 
     /// <summary>
@@ -199,6 +200,27 @@ namespace SpreadsheetEngine
             this.cells[cIndex, rIndex].BGColor = color;
         }
 
+        /// <summary>
+        /// Called to create an XML file to save the data in the spreadsheet.
+        /// </summary>
+        public void SaveToFile()
+        {
+
+        }
+
+        /// <summary>
+        /// Called to load data from an XML file.
+        /// </summary>
+        public void LoadFromFile()
+        {
+
+        }
+
+        /// <summary>
+        /// Creates parameters for undoing and redoing.
+        /// </summary>
+        /// <param name="prevUndoRedo"> The previous undo or redo action. </param>
+        /// <returns> An object[] which stores the parameters for the function. </returns>
         private object[] CreateNewUndoRedoParameters(UndoRedoCollection prevUndoRedo)
         {
             object[] redoParameters = new object[3];
