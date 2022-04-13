@@ -236,7 +236,42 @@ namespace SpreadsheetEngine
         {
             using (XmlReader reader = XmlReader.Create(fileStream))
             {
+                while (reader.Read())
+                {
+                    if (!reader.IsEmptyElement)
+                    {
+                        if (reader.IsStartElement() && (reader.Name == "spreadsheet"))
+                        {
+                            string cellName = string.Empty;
+                            uint cellColor = 0xffffffff;
+                            string cellText = string.Empty;
+                            while (reader.Read())
+                            {
+                                if (reader.NodeType == XmlNodeType.Element)
+                                {
+                                    if (reader.Name == "cell")
+                                    {
+                                        cellName = reader.GetAttribute("name");
+                                    }
+                                    else if (reader.Name == "bgcolor")
+                                    {
+                                        uint.TryParse(reader.ReadElementContentAsString(), out cellColor);
+                                    }
+                                    else if (reader.Name == "text")
+                                    {
+                                        cellText = reader.ReadElementContentAsString();
+                                    }
+                                }
 
+                                if (!string.IsNullOrEmpty(cellName))
+                                {
+                                    this.GetCellAtStringCoordinate(cellName).Text = cellText;
+                                    this.GetCellAtStringCoordinate(cellName).BGColor = cellColor;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
