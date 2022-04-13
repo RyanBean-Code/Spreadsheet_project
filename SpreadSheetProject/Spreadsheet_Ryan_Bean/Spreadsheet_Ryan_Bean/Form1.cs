@@ -55,7 +55,7 @@ namespace Spreadsheet_Ryan_Bean
             fileDialog.Filter = "XML Files (*.xml)|*.xml";
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                //this.spreadsheet = new Spreadsheet(50, 26);
+                this.spreadsheet.ClearSpreadsheet();
                 Stream fStream;
                 if ((fStream = fileDialog.OpenFile()) != null)
                 {

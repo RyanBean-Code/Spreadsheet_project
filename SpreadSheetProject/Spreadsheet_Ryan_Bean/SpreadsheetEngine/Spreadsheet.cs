@@ -127,6 +127,21 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// Resets the spreasheet.
+        /// Used before we load in a file.
+        /// </summary>
+        public void ClearSpreadsheet()
+        {
+            foreach (Cell cell in this.cells)
+            {
+                cell.Text = string.Empty;
+                cell.BGColor = 0xffffffff;
+            }
+            this.undos.Clear();
+            this.redos.Clear();
+        }
+
+        /// <summary>
         /// Gets the type of the undo the user can perform.
         /// </summary>
         /// <returns> The UndoRedoName Property of the undo on top of the stack. </returns>
