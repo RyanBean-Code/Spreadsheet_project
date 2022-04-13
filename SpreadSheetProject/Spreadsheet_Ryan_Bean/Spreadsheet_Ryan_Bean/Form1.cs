@@ -45,6 +45,28 @@ namespace Spreadsheet_Ryan_Bean
             this.redoToolStripMenuItem.Click += this.RedoToolStripMenuItem_Click;
             this.undoToolStripMenuItem.Enabled = false;
             this.redoToolStripMenuItem.Enabled = false;
+            this.saveToFileToolStripMenuItem.Click += this.SaveToFileToolStripMenuItem_Click;
+            this.loadFromFileToolStripMenuItem.Click += this.LoadFromFileToolStripMenuItem_Click;
+        }
+
+        private void LoadFromFileToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveToFileToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "XML Files (*.xml)|*.xml";
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Stream fStream;
+                if ((fStream = fileDialog.OpenFile()) != null)
+                {
+                    this.spreadsheet.SaveToFile(fStream);
+                    fStream.Close();
+                }
+            }
         }
 
         private void RedoToolStripMenuItem_Click(object? sender, EventArgs e)

@@ -203,9 +203,29 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Called to create an XML file to save the data in the spreadsheet.
         /// </summary>
-        public void SaveToFile()
+        /// <param name="fileStream"> The stream to write to. </param>
+        public void SaveToFile(Stream fileStream)
         {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "\t";
+            using (XmlWriter writer = XmlWriter.Create(fileStream, settings))
+            {
+                writer.WriteStartElement("spreadsheet");
+                foreach (Cell cell in this.cells)
+                {
+                    if (!string.IsNullOrEmpty(cell.Text))
+                    {
+                        writer.WriteStartElement("cell");
+                        writer.WriteAttributeString("name", this.GetCellName(cell));
+                        writer.WriteElementString("bgcolor", cell.BGColor.ToString());
+                        writer.WriteElementString("text", cell.Text);
+                        writer.WriteEndElement();
+                    }
+                }
 
+                writer.WriteEndElement();
+            }
         }
 
         /// <summary>
