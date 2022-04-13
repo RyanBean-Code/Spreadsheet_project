@@ -51,7 +51,18 @@ namespace Spreadsheet_Ryan_Bean
 
         private void LoadFromFileToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "XML Files (*.xml)|*.xml";
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                this.spreadsheet = new Spreadsheet(50, 26);
+                Stream fStream;
+                if ((fStream = fileDialog.OpenFile()) != null)
+                {
+                    this.spreadsheet.LoadFromFile(fStream);
+                    fStream.Close();
+                }
+            }
         }
 
         private void SaveToFileToolStripMenuItem_Click(object? sender, EventArgs e)

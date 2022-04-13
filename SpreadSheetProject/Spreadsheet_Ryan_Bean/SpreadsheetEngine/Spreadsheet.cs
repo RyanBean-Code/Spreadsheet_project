@@ -231,9 +231,13 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Called to load data from an XML file.
         /// </summary>
-        public void LoadFromFile()
+        /// <param name="fileStream"> The stream to read from. </param>
+        public void LoadFromFile(Stream fileStream)
         {
+            using (XmlReader reader = XmlReader.Create(fileStream))
+            {
 
+            }
         }
 
         /// <summary>
