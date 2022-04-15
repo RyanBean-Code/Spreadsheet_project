@@ -137,6 +137,7 @@ namespace SpreadsheetEngine
                 cell.Text = string.Empty;
                 cell.BGColor = 0xffffffff;
             }
+
             this.undos.Clear();
             this.redos.Clear();
         }
@@ -229,7 +230,7 @@ namespace SpreadsheetEngine
                 writer.WriteStartElement("spreadsheet");
                 foreach (Cell cell in this.cells)
                 {
-                    if (!string.IsNullOrEmpty(cell.Text))
+                    if (!string.IsNullOrEmpty(cell.Text) || cell.BGColor != 0xffffffff)
                     {
                         writer.WriteStartElement("cell");
                         writer.WriteAttributeString("name", this.GetCellName(cell));
@@ -339,7 +340,7 @@ namespace SpreadsheetEngine
             {
                 if (e.PropertyName == "Text")
                 {
-                    if (senderCell.Text.StartsWith('='))
+                    if (senderCell.Text.StartsWith('=') && senderCell.Text.Length > 1)
                     {
                         this.SetCellValue(senderCell);
                     }

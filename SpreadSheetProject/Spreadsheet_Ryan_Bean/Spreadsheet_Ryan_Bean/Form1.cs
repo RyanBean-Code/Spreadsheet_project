@@ -49,6 +49,11 @@ namespace Spreadsheet_Ryan_Bean
             this.loadFromFileToolStripMenuItem.Click += this.LoadFromFileToolStripMenuItem_Click;
         }
 
+        /// <summary>
+        /// Fires when the user selects load from file in the menu.
+        /// </summary>
+        /// <param name="sender"> Sender. </param>
+        /// <param name="e"> Event Args. </param>
         private void LoadFromFileToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
@@ -65,6 +70,11 @@ namespace Spreadsheet_Ryan_Bean
             }
         }
 
+        /// <summary>
+        /// Fires when the user selects save to file in the menu.
+        /// </summary>
+        /// <param name="sender"> Sender. </param>
+        /// <param name="e"> Event args. </param>
         private void SaveToFileToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             SaveFileDialog fileDialog = new SaveFileDialog();
@@ -80,18 +90,33 @@ namespace Spreadsheet_Ryan_Bean
             }
         }
 
+        /// <summary>
+        /// Fires when the user selects the Redo option.
+        /// </summary>
+        /// <param name="sender"> Sender. </param>
+        /// <param name="e"> Event Args. </param>
         private void RedoToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             this.spreadsheet.Redo();
             this.UpdateUndoRedoButtons();
         }
 
+        /// <summary>
+        /// Fires when the user selects the Undo menu option.
+        /// </summary>
+        /// <param name="sender"> Sender. </param>
+        /// <param name="e"> Event Args. </param>
         private void UndoToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             this.spreadsheet.Undo();
             this.UpdateUndoRedoButtons();
         }
 
+        /// <summary>
+        /// Fires when the user selects Change Background color menu option.
+        /// </summary>
+        /// <param name="sender"> Sender. </param>
+        /// <param name="e"> Event Args. </param>
         private void ChangeBackgroundColorToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
