@@ -377,6 +377,7 @@ namespace SpreadsheetEngine
         {
             bool isValid = true;
             bool badCell = false;
+            bool selfReference = false;
             ExpressionTree exp = new ExpressionTree(cell.Text.Substring(1));
             List<string> varibles = exp.GetVariableNames();
             foreach (string varName in varibles)
@@ -384,19 +385,26 @@ namespace SpreadsheetEngine
                 Cell? cellVaribale = this.GetCellAtStringCoordinate(varName);
                 if (cellVaribale != null)
                 {
-                    double varValue;
-                    if (!string.IsNullOrEmpty(cellVaribale.Value) && double.TryParse(cellVaribale.Value, out varValue))
+                    if (cellVaribale == cell)
                     {
-                        exp.SetVariable(varName, varValue);
+                        selfReference = true;
                     }
                     else
                     {
-                        isValid = false;
-                    }
+                        double varValue;
+                        if (!string.IsNullOrEmpty(cellVaribale.Value) && double.TryParse(cellVaribale.Value, out varValue))
+                        {
+                            exp.SetVariable(varName, varValue);
+                        }
+                        else
+                        {
+                            isValid = false;
+                        }
 
-                    cellVaribale.dependantCells.Add(cell);
-                    cellVaribale.PropertyChanged -= this.CellVaribale_PropertyChanged;
-                    cellVaribale.PropertyChanged += this.CellVaribale_PropertyChanged;
+                        cellVaribale.dependantCells.Add(cell);
+                        cellVaribale.PropertyChanged -= this.CellVaribale_PropertyChanged;
+                        cellVaribale.PropertyChanged += this.CellVaribale_PropertyChanged;
+                    }
                 }
                 else
                 {
@@ -406,7 +414,11 @@ namespace SpreadsheetEngine
 
             if (badCell)
             {
-                cell.Text = "!(bad reference)";
+                cell.Text = "!(Bad Reference)";
+            }
+            else if (selfReference)
+            {
+                cell.Text = "!(Self Reference)";
             }
             else if (isValid)
             {

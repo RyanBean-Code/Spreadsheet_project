@@ -36,6 +36,26 @@ namespace Spreadsheet_tests
         }
 
         /// <summary>
+        /// Tests that cell handles error when it references a cell that doesn't exist.
+        /// </summary>
+        [Test]
+        public void TestCellBadReference()
+        {
+            this.testSpreadsheet.SetCellText(0, 0, "=z1224");
+            Assert.That("!(Bad Reference)", Is.EqualTo(this.testSpreadsheet.cells[0, 0].Text));
+        }
+
+        /// <summary>
+        /// Tests that cell handles error when it references itself.
+        /// </summary>
+        [Test]
+        public void TestCellSelfReference()
+        {
+            this.testSpreadsheet.SetCellText(0, 0, "=A1");
+            Assert.That("!(Self Reference)", Is.EqualTo(this.testSpreadsheet.cells[0, 0].Text));
+        }
+
+        /// <summary>
         /// Tests if the undo feature works in the spreadsheet for text.
         /// </summary>
         [Test]
