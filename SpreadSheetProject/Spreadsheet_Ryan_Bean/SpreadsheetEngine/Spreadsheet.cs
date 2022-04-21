@@ -342,7 +342,14 @@ namespace SpreadsheetEngine
                 {
                     if (senderCell.Text.StartsWith('=') && senderCell.Text.Length > 1)
                     {
-                        this.SetCellValue(senderCell);
+                        try
+                        {
+                            this.SetCellValue(senderCell);
+                        }
+                        catch
+                        {
+                            senderCell.Value = senderCell.Text;
+                        }
                     }
                     else
                     {
@@ -369,27 +376,39 @@ namespace SpreadsheetEngine
         private void SetCellValue(Cell cell)
         {
             bool isValid = true;
+            bool badCell = false;
             ExpressionTree exp = new ExpressionTree(cell.Text.Substring(1));
             List<string> varibles = exp.GetVariableNames();
             foreach (string varName in varibles)
             {
-                Cell cellVaribale = this.GetCellAtStringCoordinate(varName);
-                double varValue;
-                if (!string.IsNullOrEmpty(cellVaribale.Value) && double.TryParse(cellVaribale.Value, out varValue))
+                Cell? cellVaribale = this.GetCellAtStringCoordinate(varName);
+                if (cellVaribale != null)
                 {
-                    exp.SetVariable(varName, varValue);
+                    double varValue;
+                    if (!string.IsNullOrEmpty(cellVaribale.Value) && double.TryParse(cellVaribale.Value, out varValue))
+                    {
+                        exp.SetVariable(varName, varValue);
+                    }
+                    else
+                    {
+                        isValid = false;
+                    }
+
+                    cellVaribale.dependantCells.Add(cell);
+                    cellVaribale.PropertyChanged -= this.CellVaribale_PropertyChanged;
+                    cellVaribale.PropertyChanged += this.CellVaribale_PropertyChanged;
                 }
                 else
                 {
-                    isValid = false;
+                    badCell = true;
                 }
-
-                cellVaribale.dependantCells.Add(cell);
-                cellVaribale.PropertyChanged -= this.CellVaribale_PropertyChanged;
-                cellVaribale.PropertyChanged += this.CellVaribale_PropertyChanged;
             }
 
-            if (isValid)
+            if (badCell)
+            {
+                cell.Text = "!(bad reference)";
+            }
+            else if (isValid)
             {
                 cell.Value = Convert.ToString(exp.Evaluate());
             }
