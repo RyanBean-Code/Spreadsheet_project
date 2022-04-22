@@ -26,5 +26,16 @@ namespace SpreadsheetEngine
         {
             this.dependantCells = new List<Cell>();
         }
+
+        /// <summary>
+        /// Gets the numerical representation of the cell.
+        /// </summary>
+        public int CellNumber
+        {
+            get
+            {
+                return (this.RowIndex * 26) + this.ColumnIndex;
+            }
+        }
     }
 }

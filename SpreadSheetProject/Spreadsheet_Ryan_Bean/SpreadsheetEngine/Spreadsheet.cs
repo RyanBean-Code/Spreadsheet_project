@@ -18,9 +18,20 @@ namespace SpreadsheetEngine
         /// </summary>
         public Cell[,] cells;
 
+        /// <summary>
+        /// Stack which represents the undos.
+        /// </summary>
         private Stack<UndoRedoCollection> undos;
 
+        /// <summary>
+        /// Stack which represents the redos.
+        /// </summary>
         private Stack<UndoRedoCollection> redos;
+
+        /// <summary>
+        /// Represents a directed graph of all the cells to find ciruclar references.
+        /// </summary>
+        private Graph cellGraph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
@@ -33,6 +44,7 @@ namespace SpreadsheetEngine
             this.InitializeCells(numColumns, numRows);
             this.undos = new Stack<UndoRedoCollection>();
             this.redos = new Stack<UndoRedoCollection>();
+            this.cellGraph = new Graph();
         }
 
         /// <summary>
@@ -404,12 +416,27 @@ namespace SpreadsheetEngine
                         cellVaribale.dependantCells.Add(cell);
                         cellVaribale.PropertyChanged -= this.CellVaribale_PropertyChanged;
                         cellVaribale.PropertyChanged += this.CellVaribale_PropertyChanged;
+                        this.cellGraph.AddEdge(cell.CellNumber, cellVaribale.CellNumber);
                     }
                 }
                 else
                 {
                     badCell = true;
                 }
+            }
+
+            if (this.cellGraph.IsCyclic())
+            {
+                foreach (string varName in varibles)
+                {
+                    Cell? cellVaribale = this.GetCellAtStringCoordinate(varName);
+                    if (cellVaribale != null)
+                    {
+                        this.cellGraph.RemoveEdge(cell.CellNumber, cellVaribale.CellNumber);
+                    }
+                }
+
+                cell.Text = "!(Circular Reference)";
             }
 
             if (badCell)

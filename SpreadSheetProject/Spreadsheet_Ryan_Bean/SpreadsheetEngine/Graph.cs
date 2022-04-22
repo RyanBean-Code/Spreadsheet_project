@@ -38,6 +38,48 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// Adds an edge to the graph.
+        /// </summary>
+        /// <param name="sou"> Source vertice. </param>
+        /// <param name="dest"> Destination Vertice. </param>
+        public void AddEdge(int sou, int dest)
+        {
+            this.adj[sou].Add(dest);
+        }
+
+        /// <summary>
+        /// Removes an edge from the graph.
+        /// </summary>
+        /// <param name="sou"> source. </param>
+        /// <param name="dest"> destination. </param>
+        public void RemoveEdge(int sou, int dest)
+        {
+            this.adj[sou].Remove(dest);
+        }
+
+        /// <summary>
+        /// Checks if theres a cycle in the graph.
+        /// </summary>
+        /// <returns> True if there is a cycle. </returns>
+        public bool IsCyclic()
+        {
+            // Mark all the vertices as not visited and
+            // not part of recursion stack
+            bool[] visited = new bool[this.vertices];
+            bool[] recStack = new bool[this.vertices];
+
+            for (int i = 0; i < this.vertices; i++)
+            {
+                if (this.IsCyclicUtil(i, visited, recStack))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Used to help find a cycle in the graph.
         /// </summary>
         /// <param name="i"> The current vertice. </param>
@@ -72,42 +114,6 @@ namespace SpreadsheetEngine
             }
 
             recStack[i] = false;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Adds an edge to the graph.
-        /// </summary>
-        /// <param name="sou"> Source vertice. </param>
-        /// <param name="dest"> Destination Vertice. </param>
-        private void AddEdge(int sou, int dest)
-        {
-            this.adj[sou].Add(dest);
-        }
-
-        private void RemoveEdge(int sou, int dest)
-        {
-            this.adj[sou].Remove(dest);
-        }
-        /// <summary>
-        /// Checks if theres a cycle in the graph.
-        /// </summary>
-        /// <returns> True if there is a cycle. </returns>
-        private bool IsCyclic()
-        {
-            // Mark all the vertices as not visited and
-            // not part of recursion stack
-            bool[] visited = new bool[this.vertices];
-            bool[] recStack = new bool[this.vertices];
-
-            for (int i = 0; i < this.vertices; i++)
-            {
-                if (this.IsCyclicUtil(i, visited, recStack))
-                {
-                    return true;
-                }
-            }
 
             return false;
         }
