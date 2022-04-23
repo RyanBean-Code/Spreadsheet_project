@@ -540,6 +540,7 @@ namespace SpreadsheetEngine
                         else
                         {
                             cellsToRemove.Add(cell);
+                            this.cellGraph.RemoveEdge(cell.CellNumber, senderCell.CellNumber);
                         }
                     }
 
