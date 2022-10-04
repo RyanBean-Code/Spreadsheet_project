@@ -9,4 +9,4 @@ Features:
 - load from file
 - save to file
 - upgradable design
-- code coforming to stylecops style >:(
+- code conforming to stylecops standards >:(
